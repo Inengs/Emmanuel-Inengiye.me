@@ -10,12 +10,12 @@ document.querySelectorAll('nav a').forEach(function (anchor) {
 });
 
 
-const hamburger = document.getElementById("hamburger");
-const navbar = document.getElementById("navbar");
+// const hamburger = document.getElementById("hamburger");
+// const navbar = document.getElementById("navbar");
 
-hamburger.addEventListener("click", () => {
-    navbar.classList.toggle("active");
-});
+// hamburger.addEventListener("click", () => {
+//     navbar.classList.toggle("active");
+// });
 
 
 // Auto-scrolling for projects slider
@@ -65,3 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
         startAutoScroll(); // Resume after click
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+        item.querySelector('.faq-question').addEventListener('click', () => {
+            item.classList.toggle('active');
+        });
+    });
+})

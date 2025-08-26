@@ -588,7 +588,7 @@ nav {
     /* Makes this container a flexbox */
     flex-direction: column;
     /* Stack children vertically */
-    min-height: 100vh;
+    max-height: 150vh;
     /* Ensure it fills the full viewport height */
     padding: 20px clamp(16px, 4vw, 40px);
     /* Responsive padding */
@@ -635,7 +635,7 @@ nav {
 .project-types {
     display: flex;
     /* Flexbox for layout */
-    justify-content: space-evenly;
+    justify-content: space-between;
     /* Center items horizontally */
     align-items: center;
     /* Center items vertically */
@@ -645,6 +645,10 @@ nav {
     /* Allow items to wrap on smaller screens */
     padding: 0 40px;
     gap: clamp(16px, 4vw, 36px);
+    width: 1200px;
+    /* Max width */
+    margin: 0 auto;
+    /* Center */
 }
 
 /* Individual project type */
@@ -722,168 +726,295 @@ nav {
 }
 
 /* SKILLS-EXPERIENCE SECTION */
+/* Defines the main container for the skills, collaboration, and soft skills sections using a grid layout.
+   Starts with a single column, white background, full viewport width, and specific padding/margins. */
 .skills-experience {
     display: grid;
+    /* Uses CSS Grid for layout */
     grid-template-columns: 1fr;
+    /* Single column layout with equal width */
     background-color: white;
+    /* Sets a white background */
     margin-top: 0;
+    /* Removes top margin */
     margin-left: calc(50% - 50vw);
+    /* Centers the section by offsetting half the viewport width */
     padding: 60px 80px;
+    /* Adds 60px top/bottom and 80px left/right padding */
     box-sizing: border-box;
+    /* Includes padding and border in the element's total width/height */
     width: 100vw;
+    /* Sets the width to the full viewport width */
     gap: 40px;
+    /* Adds 40px space between grid items */
 }
 
+/* Styles the unordered list within the skills section, arranging items in a flexible row layout. */
 .skills-list {
     text-decoration: none;
+    /* Removes underline from list items (though not typically needed for ul) */
     display: flex;
+    /* Uses flexbox for horizontal arrangement */
     list-style: none;
+    /* Removes default bullet points */
     gap: 24px;
+    /* Adds 24px space between list items */
     flex-wrap: wrap;
+    /* Allows items to wrap to the next line on overflow */
     max-height: 120px;
+    /* Limits the maximum height to 120px */
     justify-content: flex-start;
+    /* Aligns items to the start of the container */
 }
 
+/* Styles individual list items within the skills-list, giving them a bordered, rounded appearance. */
 .skills-list li {
     font-size: 0.95em;
+    /* Sets font size to 95% of the parent (slightly smaller than 1em) */
     border: 1px solid var(--blue-darker);
+    /* Adds a 1px border with the dark blue color variable */
     border-radius: 999px;
+    /* Creates a fully rounded (circular) border */
     display: inline-flex;
+    /* Displays as an inline flex container */
     align-items: center;
+    /* Vertically centers content within the item */
     justify-content: center;
+    /* Horizontally centers content within the item */
     text-align: center;
+    /* Centers text horizontally */
     padding: 8px 16px;
-    align-items: center;
+    /* Adds 8px top/bottom and 16px left/right padding */
     color: var(--blue-darker);
+    /* Sets text color to the dark blue variable */
     background-color: #f8f9fa;
-    /* Subtle background for contrast */
+    /* Sets a light gray background for contrast */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* Smoothly animates transform and shadow changes */
 }
 
+/* Defines hover effect for list items, adding a lift and shadow for interactivity. */
 .skills-list li:hover {
     transform: translateY(-2px);
-    /* Slight lift on hover */
+    /* Lifts the item up by 2px on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow for depth */
+    /* Adds a subtle shadow for depth */
 }
 
-/* Skills, Collaboration, and Soft Skills containers */
-.skills,
+/* Styles the individual containers for skills, collaboration, and soft skills sections. */
 .collaboration,
 .soft-skills {
     display: flex;
+    /* Uses flexbox for vertical stacking */
     flex-direction: column;
+    /*Stacks children vertically */
     gap: 16px;
-    /* Space between heading and content */
+    /* Adds 16px space between child elements */
     padding: 20px;
+    /* Adds 20px padding on all sides */
     border-radius: 16px;
-    /* Matches --radius variable */
+    /* Rounds corners to match the --radius variable */
     background-color: #f8f9fa;
-    /* Light background for distinction */
+    /* Sets a light gray background */
     border: 1px solid rgba(0, 0, 0, 0.1);
-    /* Subtle border for definition */
+    /* Adds a subtle black border with 10% opacity */
 }
 
-/* Headings */
+/* Styles the main heading within the skills-experience section. */
 .skills-experience h2 {
     margin-top: 0;
-    /* Remove default margin */
+    /* Removes default top margin */
     font-size: 1.8em;
-    /* Larger for prominence */
+    /* Sets a larger font size for prominence */
     color: var(--blue-darker);
+    /* Uses the dark blue color variable */
     font-weight: 700;
+    /* Sets bold font weight */
     text-align: left;
+    /* Aligns text to the left */
 }
 
+/* Styles the subheadings within skills, collaboration, and soft skills sections. */
 .skills h3,
 .collaboration h3,
 .soft-skills h3 {
     font-size: 1.3em;
-    /* Consistent with main heading style */
+    /* Sets a moderate font size */
     color: var(--blue-darker);
+    /* Uses the dark blue color variable */
     font-weight: 600;
+    /* Sets semi-bold font weight */
     margin: 0;
-    /* Remove default margin */
+    /* Removes default margins */
+    text-align: center;
 }
 
-/* Paragraphs */
+/* Styles the paragraphs within collaboration and soft skills sections. */
 .collaboration p,
 .soft-skills p {
     font-size: 1em;
+    /* Sets standard font size */
     color: #444;
-    /* Matches .right-section for consistency */
+    /* Sets a medium gray text color */
     line-height: 1.6;
-    /* Improved readability */
+    /* Improves readability with increased line spacing */
     margin: 0;
-    /* Remove default margin */
+    /* Removes default margins */
 }
 
-
-/* Responsive adjustments */
+/* Responsive adjustments for screens up to 768px (e.g., tablets and mobile). */
 @media (max-width: 768px) {
     .skills-experience {
         padding: 0 20px 40px;
-        /* Reduced padding for mobile */
+        /* Reduces padding to 20px sides and 40px bottom */
         gap: 24px;
-        /* Tighter spacing */
+        /* Reduces gap between grid items to 24px */
     }
 
     .skills,
     .collaboration,
     .soft-skills {
         padding: 16px;
-        /* Smaller padding on mobile */
+        /* Reduces padding to 16px on all sides */
     }
 
     .skills-list {
         gap: 16px;
-        /* Smaller gap for mobile */
+        /* Reduces gap between list items to 16px */
         max-height: none;
-        /* Allow natural flow on small screens */
+        /* Removes height limit for better flow on small screens */
     }
 
     .skills-list li {
         font-size: 0.9em;
-        /* Slightly smaller for mobile */
+        /* Slightly reduces font size */
         padding: 6px 12px;
-        /* Adjust padding */
+        /* Reduces padding to 6px top/bottom and 12px left/right */
     }
 
     .skills-experience h2 {
         font-size: 1.5em;
-        /* Smaller heading on mobile */
+        /* Reduces main heading size */
     }
 
     .skills h3,
     .collaboration h3,
     .soft-skills h3 {
         font-size: 1.2em;
-        /* Adjust for mobile */
+        /* Reduces subheading size */
     }
 }
 
+/* Responsive adjustments for screens 1000px and wider (e.g., desktops). */
 @media (min-width: 1000px) {
     .skills-experience {
         grid-template-columns: repeat(3, 1fr);
-        /* Three-column layout for larger screens */
+        /* Switches to a three-column layout */
         gap: 32px;
-        /* Slightly larger gap */
+        /* Increases gap between grid items to 32px */
     }
 
     .skills,
     .collaboration,
     .soft-skills {
         padding: 24px;
-        /* More padding for desktop */
+        /* Increases padding to 24px on all sides */
     }
 }
 
-/* Placeholder sections: Styles for experiences, testimonials, faq, contact */
-.experiences,
-.testimonials,
-.faq,
-.contact {
+/* FREQUENTLY ANSWERED QUESTIONS PAGE */
+.faq {
     min-height: 100vh;
+    /* Full viewport height */
+    padding: 40px clamp(16px, 4vw, 40px);
+    /* Consistent padding */
+    background-color: white;
+    /* Same dark bg */
+    display: flex;
+    /* Flex for centering content */
+    flex-direction: column;
+    /* Vertical stack */
+    color: var(--blue-darker);
+    /* darker blue text */
+    border-bottom-left-radius: 100px;
+    border-bottom-right-radius: 100px;
+}
+
+
+.faq-item {
+    background: #fff;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.faq-answer {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 20px;
+    color: #555;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+    padding: 15px 20px;
+}
+
+/* Circle Button */
+.circle-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.circle-btn svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.faq-item.active .circle-btn svg {
+    transform: rotate(90deg);
+}
+
+.faq h2 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    /* Responsive, matching hero */
+    margin-bottom: 20px;
+    /* Space below */
+}
+
+.faq span {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    /* Responsive */
+    color: black;
+    /* Dim color */
+}
+
+
+/* CONTACT PAGE */
+.contact {
+    position: relative;
+    min-height: 80vh;
     /* Full viewport height */
     padding: 40px clamp(16px, 4vw, 40px);
     /* Consistent padding */
@@ -893,37 +1024,206 @@ nav {
     /* Flex for centering content */
     flex-direction: column;
     /* Vertical stack */
-    justify-content: center;
-    /* Center vertically */
-    align-items: center;
-    /* Center horizontally */
-    text-align: center;
-    /* Center text */
     color: var(--ink);
     /* Light text */
+    justify-content: space-between;
+    overflow: hidden;
 }
 
-/* Placeholder headings */
-.experiences h2,
-.testimonials h2,
-.faq h2,
-.contact h2 {
-    font-size: clamp(1.8rem, 4vw, 3rem);
-    /* Responsive, matching hero */
-    margin-bottom: 20px;
-    /* Space below */
+/* Torch glow at the bottom */
+.contact::after {
+    content: "";
+    position: absolute;
+    bottom: -50px;
+    /* Start slightly below the contact section */
+    left: 50%;
+    /* Center horizontally */
+    transform: translateX(-50%);
+    width: 350px;
+    /* Beam width */
+    height: 220px;
+    /* Beam height */
+    background: radial-gradient(circle at center bottom,
+            rgba(58, 134, 255, 0.5) 0%,
+            transparent 70%);
+    /* box-shadow: 0 0 60px rgba(58, 134, 255, 0.3); */
+    opacity: 0;
+    animation: torchBottom 2.5s ease-out forwards;
+    z-index: 0;
+    /* Keep it behind content */
 }
 
-/* Placeholder paragraphs */
-.experiences p,
-.testimonials p,
-.faq p,
-.contact p {
-    font-size: clamp(1rem, 2vw, 1.5rem);
-    /* Responsive */
-    color: var(--ink-dim);
-    /* Dim color */
+/* Animation for the bottom glow */
+@keyframes torchBottom {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    100% {
+        opacity: 0.7;
+        transform: translateX(-50%) translateY(-20px);
+    }
 }
+
+/* Make sure content stays above glow */
+.contact>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* Moving Text */
+.marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+}
+
+.marquee span {
+    display: inline-block;
+    padding-right: 100px;
+    animation: scroll 20s linear infinite;
+    font-size: 4rem;
+    font-weight: bold;
+    font-weight: 700;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+
+
+/* Content layout */
+.contact-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    /* align-items: flex-start; */
+    padding: 40px;
+    background-color: linear-gradient;
+}
+
+.left-info span {
+    font-size: small;
+    font-weight: 100;
+}
+
+.left-info p {
+    font-weight: 400;
+}
+
+.left-info {
+    width: 35%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.right-info {
+    width: 45%;
+}
+
+
+.right-info h2 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.right-info input {
+    padding: 12px;
+    width: 70%;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    outline: none;
+}
+
+
+
+.right-info button {
+    padding: 10px 15px;
+    border: none;
+    background: #0077b5;
+    /* LinkedIn blue */
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center;
+ */
+}
+
+.right-info button:hover {
+    background: #e6004c;
+    transform: scale(1.05);
+}
+
+.right-info button svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Footer */
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    padding: 15px 40px;
+    margin-top: auto;
+}
+
+.footer-left {
+    font-size: 0.6em;
+    color: var(--ink-dim)
+}
+
+.footer-right {
+    display: flex;
+    flex-direction: row;
+}
+
+.footer-right a svg {
+    margin-left: 15px;
+    width: 28px;
+    height: 28px;
+    transition: transform 0.3s, fill 0.3s;
+    cursor: pointer;
+}
+
+/* Default colors */
+.instagram {
+    fill: #e1306c;
+}
+
+.whatsapp {
+    fill: #25d366;
+}
+
+.linkedin {
+    fill: #0077b5;
+}
+
+.github {
+    fill: #333;
+}
+
+/* Hover effects */
+.footer-right a svg:hover {
+    transform: scale(1.2);
+    filter: brightness(1.2);
+}
+
 
 /* Media query for mobile: Adjusts layout for smaller screens */
 @media (max-width: 768px) {
