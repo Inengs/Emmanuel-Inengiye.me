@@ -815,8 +815,10 @@ nav {
     /* Adds a 1px border with the dark blue color variable */
     border-radius: 999px;
     /* Creates a fully rounded (circular) border */
-    display: inline-flex;
-    /* Displays as an inline flex container */
+    display: flex;
+    /* Displays as an flex container */
+    gap: 8px;
+    /* space between logo and text */
     align-items: center;
     /* Vertically centers content within the item */
     justify-content: center;
@@ -1068,6 +1070,9 @@ nav {
     /* Light text */
     justify-content: space-between;
     overflow: hidden;
+
+    box-sizing: border-box;
+    /* Ensure padding doesn't cause overflow */
 }
 
 /* Torch glow at the bottom */
@@ -1124,7 +1129,7 @@ nav {
     display: inline-block;
     padding-right: 100px;
     animation: scroll 20s linear infinite;
-    font-size: 4rem;
+    font-size: clamp(2rem, 4vw, 3rem);
     font-weight: bold;
     font-weight: 700;
 }
@@ -1146,7 +1151,11 @@ nav {
     flex: 1;
     display: flex;
     justify-content: space-around;
-    padding: 40px;
+    padding: clamp(20px, 4vw, 40px);
+    gap: 20px;
+    /* Added gap for spacing */
+    flex-wrap: wrap;
+    /* Allow wrapping on smaller screens */
 }
 
 .left-info span {
@@ -1163,10 +1172,16 @@ nav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 20px;
+    /* Added for spacing */
 }
 
 .right-info {
     width: 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* Added for spacing */
 }
 
 
@@ -1209,6 +1224,57 @@ nav {
 .right-info button svg {
     width: 18px;
     height: 18px;
+}
+
+
+@media (max-width: 768px) {
+    .contact-content {
+        flex-direction: column;
+        /* Stack vertically on mobile */
+        align-items: center;
+        /* Center content */
+        padding: 20px;
+        /* Further reduce padding */
+    }
+
+    .left-info {
+        width: 100%;
+        /* Full width on mobile */
+        flex-direction: column;
+        /* Stack email/phone vertically */
+        align-items: center;
+        /* Center align */
+        text-align: center;
+        /* Center text */
+        gap: 15px;
+        /* Smaller gap */
+    }
+
+    .right-info {
+        width: 100%;
+        /* Full width on mobile */
+        align-items: center;
+        /* Center form */
+    }
+
+    .right-info input {
+        width: 100%;
+        /* Full width input */
+        max-width: none;
+        /* Remove max-width constraint */
+    }
+
+    .right-info button {
+        width: 100%;
+        /* Full width button */
+        max-width: 200px;
+        /* Optional: limit button width */
+    }
+
+    .marquee span {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        /* Smaller marquee text */
+    }
 }
 
 /* Footer */

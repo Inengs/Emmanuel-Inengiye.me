@@ -76,10 +76,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 })
 
-document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+document.getElementById('contact-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = e.target.querySelector('input[type="email"]').value;
-    alert(`Email submitted: ${email}`); // Replace with actual submission logic
+    const form = e.target;
+
+    try {
+        const response = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+            alert("Thanks for your message! I’ll get back to you soon.");
+            form.reset();
+        } else {
+            alert("Oops! Something went wrong. Try again later.");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Network error. Please check your connection.");
+    }
 });
 
 
