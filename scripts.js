@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to scroll to the next card
     function scrollNext() {
         const maxScroll = track.scrollWidth - track.clientWidth; // Max scrollable distance
-        if (track.scrollLeft >= maxScroll - 1) { // Near the end
+        if (track.scrollLeft >= maxScroll - 5) { // Near the end
             track.scrollTo({ left: 0, behavior: 'smooth' }); // Loop to start
         } else {
             track.scrollBy({ left: cardWidth, behavior: 'smooth' }); // Scroll to next card
@@ -75,3 +75,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 })
+
+document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = e.target.querySelector('input[type="email"]').value;
+    alert(`Email submitted: ${email}`); // Replace with actual submission logic
+});
+
+
+const hamburger = document.getElementById("hamburger");
+const navbar = document.getElementById("navbar");
+
+if (hamburger && navbar) {
+    hamburger.addEventListener("click", () => {
+        navbar.classList.toggle("active");
+    });
+}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <title>InengsDev</title>
@@ -21,14 +21,13 @@
 
                 <!-- navigation bar -->
                 <nav id="navbar">
-                    <!-- <div class="hamburger">
-                    ☰
-                </div> -->
+                    <div class="hamburger" id="hamburger">
+                        ☰
+                    </div>
                     <ul id="nav-list">
                         <li><a href=#about class="nav-text">About Me</a></li>
                         <li><a href=#projects class="nav-text">Projects</a></li>
                         <li><a href=#experiences class="nav-text">Experiences</a></li>
-                        <li><a href=#testimonials class="nav-text">Testimonials</a></li>
                         <li><a href=#faq class="nav-text">FAQ</a></li>
                     </ul>
                 </nav>
@@ -91,7 +90,7 @@
                         target="_blank" rel="noopener">Download App</a>
                 </article>
 
-                <article class="card" aria-label="Project 1" id="Project 1">
+                <article class="card" aria-label="Project 4" id="Project 4">
                     <img src="./assets/to do list.jpg" alt="ScreenShot of Project 1">
                     <h3>TaskFlow</h3>
                     <p>Realtime Kanban with Golang + WebSockets + JWT</p>
@@ -108,11 +107,11 @@
 
             <div class="project-types">
                 <div class="project-type">
-                    <img src="assets/react-original.svg" width="30" alt="Web applications icon">
+                    <img src="assets/react-original.svg" width="30" alt="React Logo for web applications">
                     <span>Web Applications</span>
                 </div>
                 <div class="project-type">
-                    <img src="assets/website globe.svg" width="30" alt="Websites icon">
+                    <img src="assets/website globe.svg" width="30" alt="Globe icon for websites">
                     <span>Websites</span>
                 </div>
                 <div class="project-type">
@@ -329,13 +328,16 @@
             <!-- Right Section -->
             <div class="right-info">
                 <h2>Send me your email to discuss new project</h2>
-                <input type="email" placeholder="Enter your email">
-                <button type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14 5l7 7-7 7M3 12h18" />
-                    </svg>
-                </button>
+                <form class="contact-form" name="contact-form">
+                    <input type="email" placeholder="Enter your email" name="email" autocomplete="email">
+                    <button type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14 5l7 7-7 7M3 12h18" />
+                        </svg>
+                    </button>
+                </form>
+
             </div>
         </div>
 
@@ -356,7 +358,7 @@
                     </a>
 
                     <!-- WhatsApp -->
-                    <a href="#" target="_blank">
+                    <a href="https://wa.me/2348126559940" target="_blank">
                         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
                             fill="currentColor" class="whatsapp">
                             <path
@@ -365,7 +367,7 @@
                     </a>
 
                     <!-- LinkedIn -->
-                    <a href="www.linkedin.com/in/emmanuel-inengiye-3a206a289" target="_blank">
+                    <a href="https://www.linkedin.com/in/emmanuel-inengiye-3a206a289" target="_blank">
                         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
                             fill="currentColor" class="linkedin">
                             <path
@@ -374,7 +376,7 @@
                     </a>
 
                     <!-- GitHub -->
-                    <a href="#" target="_blank">
+                    <a href="https://github.com/Inengs" target="_blank">
                         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
                             fill="currentColor" class="github">
                             <path

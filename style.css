@@ -8,7 +8,7 @@
     /* “light” color */
     --ink: #dfe7ff;
     /* body text on dark */
-    --ink-dim: #b3c0e6;
+    --ink-dim: #d0d8f0;
     /* Dimmed text color */
     --accent: #61d0ff;
     /* hover/active accents */
@@ -266,6 +266,46 @@ nav {
     /* Responsive */
     padding: clamp(8px, 1.5vw, 12px) clamp(12px, 2vw, 18px);
     /* Responsive padding */
+}
+
+/* Hamburger */
+.hamburger {
+    display: none;
+    /* Hidden by default */
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--ink);
+    padding: 8px;
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+        /* Show on mobile */
+    }
+
+    #navbar {
+        display: none;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background: var(--blue-dark);
+        padding: 1rem;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+
+    #navbar.active {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #nav-list {
+        flex-direction: column;
+        gap: 12px;
+        background: none;
+        border-radius: 0;
+    }
 }
 
 /* Hero container: Centered content with padding */
@@ -588,7 +628,7 @@ nav {
     /* Makes this container a flexbox */
     flex-direction: column;
     /* Stack children vertically */
-    max-height: 150vh;
+    min-height: 100vh;
     /* Ensure it fills the full viewport height */
     padding: 20px clamp(16px, 4vw, 40px);
     /* Responsive padding */
@@ -1106,9 +1146,7 @@ nav {
     flex: 1;
     display: flex;
     justify-content: space-around;
-    /* align-items: flex-start; */
     padding: 40px;
-    background-color: linear-gradient;
 }
 
 .left-info span {
