@@ -1,0 +1,283 @@
+---
+---
+
+<div class="chatbot-container">
+  <button class="chat-trigger" id="chat-trigger" aria-label="Open chat">
+    <span>&gt; chat with grizz</span>
+  </button>
+
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <div class="chat-title">
+        <span class="prompt">$</span> talking to grizz.exe
+      </div>
+      <button class="close-btn" id="close-chat">×</button>
+    </div>
+
+    <div class="chat-messages" id="chat-messages"></div>
+
+    <div class="chat-input-area">
+      <input 
+        type="text" 
+        id="chat-input" 
+        placeholder="ask me anything... (e.g. 'what are you working on?')" 
+        autocomplete="off"
+      />
+      <button id="send-btn">→</button>
+    </div>
+
+    <div class="suggestions">
+      <span onclick="suggestQuestion(this)">what do you build?</span>
+      <span onclick="suggestQuestion(this)">are you open to work?</span>
+      <span onclick="suggestQuestion(this)">favorite tech?</span>
+      <span onclick="suggestQuestion(this)">who are you?</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  interface BotResponses {
+    [key: string]: string;
+  }
+
+  const responses: BotResponses = {
+    greeting: "Hey there! I'm Grizz, Emmanuel's digital twin ⚡ What's up?",
+    "who are you": "I'm Emmanuel Inengiye — a backend engineer who loves building quiet, reliable systems. Nice to meet you!",
+    "what are you working on": "Right now I'm deep in distributed systems, IoT analytics at GEUTech, and growing my open source projects.",
+    "open to work": "Yes! I'm currently open to interesting opportunities — especially in backend, infrastructure, or developer tools.",
+    "favorite tech": "Go is my daily driver. Also love Python, TypeScript, and anything that helps me ship fast and sleep well at night.",
+    "hobbies": "Besides coding? I enjoy writing, contributing to open source, and occasionally pretending I understand distributed consensus algorithms.",
+    default: "Interesting question! I'm still learning, but Emmanuel would probably say: it depends on the context and tradeoffs 😌"
+  };
+
+  function addMessage(text: string, isUser = false): void {
+    const messages = document.getElementById('chat-messages') as HTMLDivElement | null;
+    if (!messages) return;
+
+    const msg = document.createElement('div');
+    msg.className = isUser ? 'user-message' : 'bot-message';
+    msg.textContent = text;
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function getBotResponse(input: string): string {
+    const lower = input.toLowerCase();
+    
+    if (lower.includes('hi') || lower.includes('hello') || lower.includes('hey')) 
+      return responses.greeting;
+    if (lower.includes('who are you') || lower.includes('your name')) 
+      return responses["who are you"];
+    if (lower.includes('working on') || lower.includes('projects')) 
+      return responses["what are you working on"];
+    if (lower.includes('open to work') || lower.includes('hiring') || lower.includes('job')) 
+      return responses["open to work"];
+    if (lower.includes('tech') || lower.includes('stack') || lower.includes('favorite')) 
+      return responses["favorite tech"];
+    if (lower.includes('hobby') || lower.includes('fun')) 
+      return responses.hobbies;
+
+    return responses.default;
+  }
+
+  function suggestQuestion(el: HTMLElement): void {
+    const input = document.getElementById('chat-input') as HTMLInputElement | null;
+    if (input) {
+      input.value = el.textContent || '';
+      sendMessage();
+    }
+  }
+
+  function sendMessage(): void {
+    const input = document.getElementById('chat-input') as HTMLInputElement | null;
+    if (!input) return;
+
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, true);
+    input.value = '';
+
+    // Simulate thinking time
+    setTimeout(() => {
+      const reply = getBotResponse(text);
+      addMessage(reply);
+    }, 650);
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    const trigger = document.getElementById('chat-trigger');
+    const chatWindow = document.getElementById('chat-window');
+    const closeBtn = document.getElementById('close-chat');
+    const input = document.getElementById('chat-input') as HTMLInputElement | null;
+    const sendBtn = document.getElementById('send-btn');
+
+    if (!trigger || !chatWindow || !closeBtn) return;
+
+    trigger.addEventListener('click', () => {
+      chatWindow.classList.add('open');
+      input?.focus();
+
+      const messages = document.getElementById('chat-messages') as HTMLDivElement | null;
+      if (messages && messages.children.length === 0) {
+        setTimeout(() => addMessage(responses.greeting), 400);
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      chatWindow.classList.remove('open');
+    });
+
+    sendBtn?.addEventListener('click', sendMessage);
+    
+    input?.addEventListener('keypress', (e: KeyboardEvent) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+  });
+</script>
+
+<style>
+  /* (Same styles as before - unchanged) */
+  .chatbot-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+  }
+
+  .chat-trigger {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 12px 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+    transition: all 0.2s;
+  }
+
+  .chat-trigger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(45, 106, 79, 0.4);
+  }
+
+  .chat-window {
+    display: none;
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    width: 380px;
+    height: 520px;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    overflow: hidden;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .chat-window.open {
+    display: flex;
+  }
+
+  /* ... rest of your styles (header, messages, input, suggestions) ... */
+  .chat-header {
+    background: var(--accent-bg);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .chat-title { color: var(--accent); font-weight: 700; }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--ink-muted);
+  }
+
+  .chat-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .bot-message {
+    align-self: flex-start;
+    background: var(--bg-secondary);
+    padding: 10px 14px;
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+    max-width: 85%;
+  }
+
+  .user-message {
+    align-self: flex-end;
+    background: var(--accent);
+    color: var(--bg);
+    padding: 10px 14px;
+    border-radius: 6px;
+    max-width: 80%;
+  }
+
+  .chat-input-area {
+    padding: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+
+  .chat-input-area input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 10px 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .chat-input-area button {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 0 18px;
+    cursor: pointer;
+  }
+
+  .suggestions {
+    padding: 8px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-secondary);
+  }
+
+  .suggestions span {
+    font-size: 10.5px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--ink-muted);
+    cursor: pointer;
+    border-radius: 2px;
+  }
+
+  .suggestions span:hover {
+    background: var(--accent-bg);
+    color: var(--accent);
+  }
+</style>

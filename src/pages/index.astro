@@ -1,0 +1,174 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+---
+
+<Layout title="Emmanuel Inengiye">
+  <Navbar />
+
+  <main style="margin-left: 240px;">
+    <section class="hero">
+      <div class="prompt">$ whoami</div>
+
+      <h1>Emmanuel Inengiye<span class="cursor"></span></h1>
+
+      <p class="tagline">backend engineer · nigeria · building in public</p>
+
+      <p class="bio">
+        i build systems that run quietly and handle things well.
+        currently working with go, python, typescript — and whatever
+        interesting problem shows up next.
+      </p>
+
+      <div class="tags">
+        <span class="tag">go</span>
+        <span class="tag">python</span>
+        <span class="tag">typescript</span>
+        <span class="tag">nestjs</span>
+        <span class="tag">fastapi</span>
+        <span class="tag">docker</span>
+        <span class="tag filled">open to work</span>
+      </div>
+
+      <div class="links">
+        <a href="/projects">&gt; see my projects</a>
+        <a href="https://github.com/Inengs" target="_blank">&gt; github</a>
+        <a href="https://www.linkedin.com/in/emmanuel-inengiye-3a206a289" target="_blank">&gt; linkedin</a>
+      </div>
+    </section>
+
+    <section class="now">
+      <div class="section-label">// what i'm doing now</div>
+      <ul>
+        <li>building this portfolio with astro + tailwind</li>
+        <li>contributing to chaoss/augur open source project</li>
+        <li>writing about authentication on medium & hashnode</li>
+        <li>aws ai & ml scholars program — phase 1</li>
+      </ul>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+  }
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .prompt {
+    font-size: 12px;
+    color: var(--ink-dim);
+  }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 3px;
+    height: 0.85em;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-left: 6px;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .tagline {
+    font-size: 13px;
+    color: var(--ink-muted);
+  }
+
+  .bio {
+    font-size: 14px;
+    color: var(--ink-muted);
+    max-width: 560px;
+    line-height: 1.8;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .tag {
+    font-size: 11px;
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    color: var(--ink-muted);
+  }
+
+  .tag.filled {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .links a {
+    font-size: 12px;
+    color: var(--accent);
+    transition: opacity 0.2s;
+  }
+
+  .links a:hover { opacity: 0.7; }
+
+  .now {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    color: var(--ink-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .now ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .now ul li {
+    font-size: 13px;
+    color: var(--ink-muted);
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .now ul li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+</style>

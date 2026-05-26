@@ -1,0 +1,125 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+
+---
+
+<Layout title="About">
+  <Navbar />
+
+  <main>
+    <section class="about-page">
+      <div class="page-header">
+        <div class="prompt">$ whoami</div>
+        <h1>About</h1>
+      </div>
+
+      <div class="about-content">
+        <p class="intro">
+          I'm Emmanuel Inengiye, a backend engineer based in Nigeria.
+        </p>
+
+        <p class="bio">
+          I build quiet, reliable systems that scale. Currently focused on 
+          distributed systems, IoT platforms, and open source tools.
+        </p>
+
+        <div class="highlights">
+          <div class="highlight-item">
+            <span class="label">Currently</span>
+            <span>Software Engineer @ GEUTech</span>
+          </div>
+          <div class="highlight-item">
+            <span class="label">Based in</span>
+            <span>Nigeria</span>
+          </div>
+          <div class="highlight-item">
+            <span class="label">Open to</span>
+            <span>Interesting backend &amp; infrastructure roles</span>
+          </div>
+        </div>
+
+        <div class="cta">
+          <a href="/projects" class="cta-link">&gt; see my projects</a>
+          <a href="/writing" class="cta-link">&gt; read my writing</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  main {
+    margin-left: 240px;
+    max-width: 720px;
+    padding: 60px 40px;
+  }
+
+  .page-header {
+    margin-bottom: 48px;
+  }
+
+  .prompt {
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .intro {
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+
+  .bio {
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: var(--ink-muted);
+    max-width: 560px;
+    margin-bottom: 40px;
+  }
+
+  .highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .highlight-item {
+    display: flex;
+    gap: 24px;
+    font-size: 13.5px;
+  }
+
+  .label {
+    width: 90px;
+    color: var(--accent);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .cta-link {
+    color: var(--accent);
+    font-size: 13px;
+    text-decoration: none;
+  }
+
+  .cta-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

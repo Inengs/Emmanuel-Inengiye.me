@@ -1,0 +1,154 @@
+---
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/projects", label: "Projects" },
+  { href: "/writing", label: "Writing" },
+  { href: "/open-source", label: "Open Source" },
+  { href: "/experience", label: "Experience" },
+  { href: "/about", label: "About" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="sidebar">
+  <div class="nav-inner">
+    <!-- Logo -->
+    <a href="/" class="nav-logo">&gt; Inengs.me</a>
+
+    <!-- Profile Picture -->
+    <div class="profile-section">
+      <img 
+        src="/my-logo.png" 
+        alt="Emmanuel Inengiye" 
+        class="profile-image"
+      />
+    </div>
+
+    <!-- Navigation Links -->
+    <ul class="nav-links">
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class={currentPath === link.href || (currentPath === "/" && link.href === "/") ? "active" : ""}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <button
+    class="theme-toggle"
+    id="theme-toggle"
+    onclick="window.__toggleTheme()"
+    aria-label="Toggle theme"
+    >
+    <span class="sun-icon">☀️</span>
+    <span class="moon-icon" style="display:none">🌙</span>
+    </button>
+
+    <!-- Social Links -->
+    <div class="social-links">
+      <a href="https://github.com/Inengs" target="_blank" aria-label="GitHub">
+        <span>GitHub</span>
+      </a>
+      <a href="https://linkedin.com/in/emmanuel-inengiye-3a206a289" target="_blank" aria-label="LinkedIn">
+        <span>LinkedIn</span>
+      </a>
+      <a href="https://x.com/yourusername" target="_blank" aria-label="X">
+        <span>X</span>
+      </a>
+      <a href="https://instagram.com/yourusername" target="_blank" aria-label="Instagram">
+        <span>IG</span>
+      </a>
+      <a href="/resume.pdf" target="_blank" aria-label="Resume">
+        <span>Resume</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 240px;
+    background-color: var(--bg);
+    border-right: 1px solid var(--border);
+    z-index: 50;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 48px;
+  }
+
+  .nav-logo {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .nav-logo:hover {
+    color: var(--accent);
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .nav-links a {
+    font-size: 15px;
+    color: var(--ink-muted);
+    padding: 6px 12px;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--ink);
+    background: var(--accent-bg);
+  }
+
+  .nav-links a.active {
+    border-left: 2px solid var(--accent);
+  }
+
+    /* === Improved Theme Toggle === */
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--ink-muted);
+    font-size: 18px;
+    padding: 10px 14px;
+    cursor: pointer;
+    align-self: flex-start;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    width: fit-content;
+  }
+
+.theme-toggle:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+    transform: scale(1.05);
+  }
+
+  .sun-icon, .moon-icon {
+    transition: opacity 0.4s ease;
+  }
+</style>

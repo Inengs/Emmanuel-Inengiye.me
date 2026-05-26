@@ -1,0 +1,63 @@
+---
+import Chatbot from '../components/Chatbot.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Emmanuel Inengiye",
+  description = "Backend engineer based in Nigeria. Building systems that run quietly and handle things well.",
+} = Astro.props;
+---
+
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/my-logo.png" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <script is:inline>
+        const saved = localStorage.getItem("theme");
+        if (saved === "light") {
+        document.documentElement.classList.remove("dark");
+        } else {
+        document.documentElement.classList.add("dark");
+        }
+    </script>
+  </head>
+  <body>
+    <slot />
+
+    <!-- Chatbot available on all pages -->
+    <Chatbot />
+    
+    <script>
+        function syncToggle() {
+            const isDark = document.documentElement.classList.contains("dark");
+            const btn = document.getElementById("theme-toggle");
+            if (!btn) return;
+            const sun = btn.querySelector(".sun-icon") as HTMLElement | null;
+            const moon = btn.querySelector(".moon-icon") as HTMLElement | null;
+            if (sun) sun.style.display = isDark ? "none" : "inline";
+            if (moon) moon.style.display = isDark ? "inline" : "none";
+        }
+
+        window.__toggleTheme = () => {
+            const isDark = document.documentElement.classList.contains("dark");
+            document.documentElement.classList.toggle("dark", !isDark);
+            localStorage.setItem("theme", isDark ? "light" : "dark");
+            syncToggle();
+        };
+
+        // Run on every page load
+        document.addEventListener("DOMContentLoaded", syncToggle);
+    </script>
+  </body>
+</html>
