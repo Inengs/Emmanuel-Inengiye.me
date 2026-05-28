@@ -10,71 +10,101 @@ import Navbar from '../components/Navbar.astro';
     <section class="hero">
       <div class="prompt">$ whoami</div>
 
-      <h1>Emmanuel Inengiye<span class="cursor"></span></h1>
+      <h1>Emmanuel Inengiye</h1>
 
-      <p class="tagline">backend engineer · nigeria · building in public</p>
-
-      <p class="bio">
-        i build systems that run quietly and handle things well.
-        currently working with go, python, typescript — and whatever
-        interesting problem shows up next.
+      <p class="tagline">
+        <span id="typed"></span><span class="cursor"></span>
       </p>
 
-      <div class="tags">
-        <span class="tag">go</span>
-        <span class="tag">python</span>
-        <span class="tag">typescript</span>
-        <span class="tag">nestjs</span>
-        <span class="tag">fastapi</span>
-        <span class="tag">docker</span>
-        <span class="tag filled">open to work</span>
-      </div>
+      <!-- <p class="tagline">backend engineer · nigeria · building in public</p> -->
+
+      <p class="bio">
+        i build reliable systems in go, python and typescript
+      </p>
 
       <div class="links">
-        <a href="/projects">&gt; see my projects</a>
-        <a href="https://github.com/Inengs" target="_blank">&gt; github</a>
-        <a href="https://www.linkedin.com/in/emmanuel-inengiye-3a206a289" target="_blank">&gt; linkedin</a>
+        <a href="/projects">&gt; see my work</a>
+        <a href="mailto:inengiyeemmanuel@gmail.com">&gt; get in touch</a>
       </div>
-    </section>
-
-    <section class="now">
-      <div class="section-label">// what i'm doing now</div>
-      <ul>
-        <li>building this portfolio with astro + tailwind</li>
-        <li>contributing to chaoss/augur open source project</li>
-        <li>writing about authentication on medium & hashnode</li>
-        <li>aws ai & ml scholars program — phase 1</li>
-      </ul>
     </section>
   </main>
 </Layout>
 
+<script>
+  const phrases = [
+    "backend engineer",
+    "systems engineer",
+    "open source contributor",
+  ];
+
+  let phraseIndex = 0;
+  let charIndex = 0;
+  let deleting = false;
+  const el = document.getElementById("typed");
+
+  function tick() {
+    if (!el) return;
+    const current = phrases[phraseIndex];
+
+    if (!deleting) {
+      charIndex++;
+      el.textContent = current.slice(0, charIndex);
+      if (charIndex === current.length) {
+        deleting = true;
+        setTimeout(tick, 1800);
+        return;
+      }
+      setTimeout(tick, 80);
+    } else {
+      charIndex--;
+      el.textContent = current.slice(0, charIndex);
+      if (charIndex === 0) {
+        deleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        setTimeout(tick, 400);
+        return;
+      }
+      setTimeout(tick, 45);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => tick());
+</script>
+
 <style>
   main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 60px 24px;
+    margin-left: 240px;
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
-    gap: 80px;
+    align-items: center;
+    padding: 0 60px;
   }
 
   .hero {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
+    max-width: 680px;
   }
 
   .prompt {
     font-size: 12px;
     color: var(--ink-dim);
+    letter-spacing: 0.06em;
   }
 
   h1 {
     font-size: clamp(28px, 5vw, 48px);
     font-weight: 700;
-    line-height: 1.1;
+    line-height: 1.05;
     color: var(--ink);
+  }
+
+  .tagline {
+    font-size: clamp(14px, 2vw, 18px);
+    color: var(--accent);
+    font-weight: 500;
+    min-height: 1.5em;
   }
 
   .cursor {
