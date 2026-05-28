@@ -47,7 +47,7 @@ const currentPath = Astro.url.pathname;
 
         <div class="divider"></div>
 
-         <a href="https://github.com/Inengs" target="_blank" aria-label="GitHub" class="social-link">
+        <a href="https://github.com/Inengs" target="_blank" aria-label="GitHub" class="social-link">
           <img src="/github.svg" alt="GitHub" class="social-icon github" />
         </a>
         <a href="https://linkedin.com/in/emmanuel-inengiye-3a206a289" target="_blank" aria-label="LinkedIn" class="social-link">
@@ -151,6 +151,14 @@ const currentPath = Astro.url.pathname;
   .bottom-section {
     padding-top: 20px;
     border-top: 1px solid var(--border);
+    margin-top: auto;
+  }
+
+  .social-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;            /* Optional: wrap if screen is very small */
   }
 
   .social-row {
@@ -172,7 +180,7 @@ const currentPath = Astro.url.pathname;
     width: 1px;
     height: 16px;
     background: var(--border);
-    margin: 0 2px;
+    margin: 0 4px;
   }
 
   .social-link {
