@@ -4,38 +4,37 @@ import Navbar from '../components/Navbar.astro';
 
 const projects = [
   {
-    title: "Adaptiq / Geutech",
-    slug: "adaptiq",
-    description: "Production-grade IoT analytics platform. Multi-tenant architecture with real-time data processing and visualization.",
-    tech: ["Go", "InfluxDB", "Keycloak", "GCP", "Docker"],
-    year: "2024 — Present",
-    status: "Production",
-    links: {
-      github: "#",
-      live: "#"
-    }
-  },
-  {
-    title: "AuthForge",
-    slug: "authforge",
-    description: "Lightweight authentication service with session management, RBAC, and audit logging. Built for microservices.",
-    tech: ["Go", "PostgreSQL", "Redis", "Fiber"],
+    title: "Analytics App",
+    slug: "adaptiq-test",
+    description: "Scalable IoT analytics platform with MQTT data ingestion, ML forecasting, and optimization analytics.",
+    tech: ["Node", "Postgres", "Redis", "Next.js", "Docker"],
     year: "2025",
-    status: "Open Source",
+    status: "Staging",
     links: {
-      github: "https://github.com/Inengs/authforge",
+      github: "https://github.com/Inengs/analytics-app",
       live: "#"
     }
   },
   {
-    title: "QuietStack",
-    slug: "quietstack",
-    description: "Internal developer platform for managing backend services with focus on observability and reliability.",
-    tech: ["Python", "FastAPI", "Prometheus", "Grafana"],
+    title: "BitTorrent Client",
+    slug: "bittorrent-client",
+    description: "A BitTorrent CLI client built from scratch in Go: parses .torrent files, contacts trackers, connects to peers via TCP, and downloads files using the BitTorrent peer wire protocol.",
+    tech: ["Go"],
+    year: "2025",
+    status: "Internal",
+    links: {
+      github: "https://github.com/Inengs/bittorrent-client",
+    }
+  },
+  {
+    title: "Tweet audit",
+    slug: "tweetaudit",
+    description: "A CLI tool that audits your Twitter/X archive using Gemini AI and flags tweets for deletion based on your own criteria",
+    tech: ["Go", "Gemini API"],
     year: "2024",
     status: "Internal",
     links: {
-      github: "#",
+      github: "https://github.com/Inengs/tweet-audit",
       live: "#"
     }
   },
