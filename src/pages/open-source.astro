@@ -82,10 +82,20 @@ const sortedYears = Object.keys(ossByYear).sort((a, b) => Number(b) - Number(a))
 </Layout>
 
 <style>
-  main {
-    margin-left: 240px;
-    max-width: 780px;
-    padding: 60px 40px;
+  /* Desktop */
+  @media (min-width: 769px) {
+    main {
+      margin-left: 240px;
+      max-width: 720px;
+      padding: 60px 40px;
+    }
+  }
+
+  /* Mobile adjustments per page */
+  @media (max-width: 768px) {
+    main {
+      padding: 32px 20px;
+    }
   }
 
   .page-header {

@@ -90,10 +90,20 @@ const projects = [
 </Layout>
 
 <style>
-  main {
-    margin-left: 240px;
-    max-width: 900px;
-    padding: 60px 40px;
+  /* Desktop */
+  @media (min-width: 769px) {
+    main {
+      margin-left: 240px;
+      max-width: 720px;
+      padding: 60px 40px;
+    }
+  }
+
+  /* Mobile adjustments per page */
+  @media (max-width: 768px) {
+    main {
+      padding: 32px 20px;
+    }
   }
 
   .projects-page {
