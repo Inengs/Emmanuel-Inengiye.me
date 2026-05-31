@@ -11,10 +11,31 @@ const links = [
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="sidebar">
+<!-- Mobile top bar -->
+<div class="mobile-topbar">
+  <a href="/" class="nav-logo">&gt; Inengs.me</a>
+  <div class="mobile-right">
+    <button
+      class="theme-toggle mobile-theme"
+      onclick="window.__toggleTheme()"
+      aria-label="Toggle theme"
+    >
+      <span class="sun-icon">☀️</span>
+      <span class="moon-icon" style="display:none">🌙</span>
+    </button>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</div>
+
+<!-- Overlay for mobile drawer -->
+<div class="nav-overlay" id="nav-overlay"></div>
+
+<nav class="sidebar" id="sidebar">
   <div class="nav-inner">
     <!-- Logo -->
-    <a href="/" class="nav-logo">&gt; Inengs.me</a>
+    <a href="/" class="nav-logo desktop-logo">&gt; Inengs.me</a>
 
     <!-- Navigation Links -->
     <ul class="nav-links">
@@ -31,7 +52,7 @@ const currentPath = Astro.url.pathname;
     </ul>
 
     <button
-      class="theme-toggle"
+      class="theme-toggle desktop-theme"
       id="theme-toggle"
       onclick="window.__toggleTheme()"
       aria-label="Toggle theme"
@@ -71,7 +92,36 @@ const currentPath = Astro.url.pathname;
   </div>
 </nav>
 
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('nav-overlay');
+ 
+  function openMenu() {
+    sidebar?.classList.add('open');
+    overlay?.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  }
+ 
+  function closeMenu() {
+    sidebar?.classList.remove('open');
+    overlay?.classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+ 
+  hamburger?.addEventListener('click', openMenu);
+  overlay?.addEventListener('click', closeMenu);
+ 
+  // Close on nav link click (mobile)
+  sidebar?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+</script>
+
+
 <style>
+  /* ── Desktop sidebar ─────────────────────────────── */
   .sidebar {
     position: fixed;
     left: 0;
@@ -84,6 +134,7 @@ const currentPath = Astro.url.pathname;
     padding: 32px 24px;
     display: flex;
     flex-direction: column;
+    transition: transform 0.3s ease;
   }
 
   .nav-inner {
@@ -98,6 +149,7 @@ const currentPath = Astro.url.pathname;
     color: var(--ink);
     margin-bottom: 32px;
     transition: color 0.2s;
+    text-decoration: none;
   }
 
   .nav-logo:hover { color: var(--accent); }
@@ -108,6 +160,7 @@ const currentPath = Astro.url.pathname;
     flex-direction: column;
     gap: 4px;
     margin-bottom: 32px;
+    padding: 0;
   }
 
   .nav-links a {
@@ -117,6 +170,7 @@ const currentPath = Astro.url.pathname;
     padding: 6px 12px;
     border-radius: 2px;
     transition: all 0.2s;
+    text-decoration: none;
   }
 
   .nav-links a:hover,
@@ -224,5 +278,95 @@ const currentPath = Astro.url.pathname;
 
   .resume-icon {
     color: var(--accent);
+  }
+
+  /* ── Mobile top bar ──────────────────────────────── */
+  .mobile-topbar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    z-index: 60;
+    padding: 0 20px;
+    align-items: center;
+    justify-content: space-between;
+  }
+ 
+  .mobile-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+ 
+  .mobile-theme {
+    margin-bottom: 0;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+ 
+  .hamburger {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+ 
+  .hamburger span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--ink);
+    transition: all 0.2s;
+  }
+ 
+  .nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 40;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+ 
+  .nav-overlay.visible {
+    opacity: 1;
+  }
+ 
+  .desktop-logo { display: block; }
+  .mobile-theme { display: none; }
+ 
+  /* ── Responsive breakpoint ───────────────────────── */
+  @media (max-width: 768px) {
+    .mobile-topbar { display: flex; }
+    .desktop-logo { display: none; }
+    .desktop-theme { display: none; }
+    .mobile-theme { display: block; }
+    .nav-overlay { display: block; }
+ 
+    .sidebar {
+      transform: translateX(-100%);
+      top: 0;
+      z-index: 55;
+      width: 260px;
+      padding-top: 20px;
+    }
+ 
+    .sidebar.open {
+      transform: translateX(0);
+    }
+ 
+    .desktop-logo {
+      display: block;
+      margin-top: 8px;
+    }
   }
 </style>
