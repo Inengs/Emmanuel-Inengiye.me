@@ -135,6 +135,8 @@ const sortedYears = Object.keys(writingsByYear).sort((a, b) => Number(b) - Numbe
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 6px;
   }
 
   .category {
@@ -172,5 +174,11 @@ const sortedYears = Object.keys(writingsByYear).sort((a, b) => Number(b) - Numbe
     font-size: 13.2px;
     line-height: 1.6;
     color: var(--ink-muted);
+  }
+
+  @media (max-width: 480px) {
+    .writing-card:hover { transform: none; }
+ 
+    .title { font-size: 15px; }
   }
 </style>

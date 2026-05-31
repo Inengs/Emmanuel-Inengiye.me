@@ -87,7 +87,7 @@ const sortedYears = Object.keys(experiencesByYear).sort((a, b) => Number(b) - Nu
   }
 
   h1 {
-    font-size: 42px;
+    font-size: clamp(28px, 5vw, 42px);
     font-weight: 700;
     margin-bottom: 12px;
   }
@@ -137,6 +137,8 @@ const sortedYears = Object.keys(experiencesByYear).sort((a, b) => Number(b) - Nu
     justify-content: space-between;
     margin-bottom: 12px;
     font-size: 11.5px;
+    flex-wrap: wrap;
+    gap: 4px;
   }
 
   .period {
@@ -166,5 +168,15 @@ const sortedYears = Object.keys(experiencesByYear).sort((a, b) => Number(b) - Nu
     font-size: 13.5px;
     line-height: 1.65;
     color: var(--ink-muted);
+  }
+
+  @media (max-width: 480px) {
+    .experience-card {
+      padding: 18px 16px;
+    }
+ 
+    .experience-card:hover {
+      transform: none;
+    }
   }
 </style>

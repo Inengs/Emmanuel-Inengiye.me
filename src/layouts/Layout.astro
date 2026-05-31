@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Chatbot from '../components/Chatbot.astro';
+import Terminal from '../components/Terminal.astro';
 
 interface Props {
   title?: string;
@@ -25,40 +26,55 @@ const {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <script is:inline>
-        const saved = localStorage.getItem("theme");
-        if (saved === "light") {
+      const saved = localStorage.getItem("theme");
+      if (saved === "light") {
         document.documentElement.classList.remove("dark");
-        } else {
+      } else {
         document.documentElement.classList.add("dark");
-        }
+      }
     </script>
   </head>
   <body>
     <slot />
-
-    <!-- Chatbot available on all pages -->
     <Chatbot />
-    
+    <Terminal />
+
     <script>
-        function syncToggle() {
-            const isDark = document.documentElement.classList.contains("dark");
-            const btn = document.getElementById("theme-toggle");
-            if (!btn) return;
-            const sun = btn.querySelector(".sun-icon") as HTMLElement | null;
-            const moon = btn.querySelector(".moon-icon") as HTMLElement | null;
-            if (sun) sun.style.display = isDark ? "none" : "inline";
-            if (moon) moon.style.display = isDark ? "inline" : "none";
-        }
+      function syncToggle() {
+        const isDark = document.documentElement.classList.contains("dark");
 
-        window.__toggleTheme = () => {
-            const isDark = document.documentElement.classList.contains("dark");
-            document.documentElement.classList.toggle("dark", !isDark);
-            localStorage.setItem("theme", isDark ? "light" : "dark");
-            syncToggle();
-        };
+        // sync all theme toggles on the page
+        document.querySelectorAll('[aria-label="Toggle theme"]').forEach(btn => {
+          const sun = btn.querySelector(".sun-icon") as HTMLElement | null;
+          const moon = btn.querySelector(".moon-icon") as HTMLElement | null;
+          if (sun) sun.style.display = isDark ? "none" : "inline";
+          if (moon) moon.style.display = isDark ? "inline" : "none";
+        });
+      }
 
-        // Run on every page load
-        document.addEventListener("DOMContentLoaded", syncToggle);
+      window.__toggleTheme = () => {
+        const isDark = document.documentElement.classList.contains("dark");
+        document.documentElement.classList.toggle("dark", !isDark);
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+        syncToggle();
+      };
+
+      document.addEventListener("DOMContentLoaded", syncToggle);
     </script>
   </body>
 </html>
+
+<style is:global>
+  /* Mobile: shift page content below the fixed topbar */
+  @media (max-width: 768px) {
+    body {
+      padding-top: 56px;
+    }
+
+    /* All page <main> elements lose the sidebar margin on mobile */
+    main {
+      margin-left: 0 !important;
+      padding: 32px 20px !important;
+    }
+  }
+</style>

@@ -99,7 +99,7 @@ const sortedYears = Object.keys(ossByYear).sort((a, b) => Number(b) - Number(a))
   }
 
   h1 {
-    font-size: 42px;
+    font-size: clamp(28px, 5vw, 42px);
     font-weight: 700;
     margin-bottom: 12px;
   }
@@ -150,8 +150,12 @@ const sortedYears = Object.keys(ossByYear).sort((a, b) => Number(b) - Number(a))
   .card-top {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 6px;
   }
+ 
 
   .type {
     font-size: 10px;
@@ -220,5 +224,20 @@ const sortedYears = Object.keys(ossByYear).sort((a, b) => Number(b) - Number(a))
     display: flex;
     align-items: center;
     gap: 4px;
+  }
+
+  /* ── Responsive ──────────────────────────────────── */
+  @media (max-width: 480px) {
+    .oss-card {
+      padding: 18px 16px;
+    }
+ 
+    .oss-card:hover {
+      transform: none;
+    }
+ 
+    .title {
+      font-size: 15px;
+    }
   }
 </style>

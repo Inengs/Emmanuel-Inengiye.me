@@ -1,0 +1,502 @@
+---
+---
+
+<!-- Terminal trigger button -->
+<button class="terminal-trigger" id="terminal-trigger" aria-label="Open terminal">
+  <span class="terminal-icon">&gt;_</span>
+  <span class="terminal-hint">press /</span>
+</button>
+
+<!-- Terminal window -->
+<div class="terminal-overlay" id="terminal-overlay">
+  <div class="terminal-window" id="terminal-window" role="dialog" aria-label="Terminal command palette">
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="terminal-title">grizz@portfolio:~</div>
+      <button class="terminal-close" id="terminal-close" aria-label="Close terminal">×</button>
+    </div>
+
+    <div class="terminal-body" id="terminal-body">
+      <div class="terminal-line welcome">
+        <span class="terminal-output">Welcome to grizz's terminal. Type <span class="highlight">help</span> to see available commands.</span>
+      </div>
+    </div>
+
+    <div class="terminal-input-row">
+      <span class="terminal-prompt">grizz@portfolio:~$</span>
+      <input
+        type="text"
+        id="terminal-input"
+        class="terminal-input"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        placeholder="type a command..."
+        aria-label="Terminal input"
+      />
+    </div>
+
+    <div class="terminal-suggestions">
+      <span class="sug-label">try:</span>
+      <button onclick="terminalRun('help')">help</button>
+      <button onclick="terminalRun('whoami')">whoami</button>
+      <button onclick="terminalRun('ls')">ls</button>
+      <button onclick="terminalRun('skills')">skills</button>
+      <button onclick="terminalRun('uptime')">uptime</button>
+      <button onclick="terminalRun('ping grizz')">ping grizz</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  type CommandMap = Record<string, () => string | string[]>;
+
+  const COMMANDS: CommandMap = {
+    help: () => [
+      "available commands:",
+      "  whoami        — who is this guy?",
+      "  ls            — list all sections",
+      "  cat bio.txt   — read the full bio",
+      "  skills        — tech stack breakdown",
+      "  projects      — current builds",
+      "  uptime        — how long has he been coding?",
+      "  ping grizz    — check if he's available",
+      "  contact       — how to reach him",
+      "  clear         — clear the terminal",
+    ],
+    whoami: () => [
+      "Emmanuel Inengiye (Grizz)",
+      "Backend Engineer · Nigeria",
+      "Building quiet, reliable systems that handle things well.",
+      "Currently @ GEUTech · Stoxava",
+    ],
+    ls: () => [
+      "drwxr-xr-x  /projects",
+      "drwxr-xr-x  /writing",
+      "drwxr-xr-x  /experience",
+      "drwxr-xr-x  /open-source",
+      "drwxr-xr-x  /about",
+      "-rw-r--r--  resume.pdf",
+    ],
+    "cat bio.txt": () => [
+      "Self-taught backend engineer who learned by building things from scratch.",
+      "BitTorrent clients in Go. Miniature Redis servers in Python.",
+      "Production IoT platforms on GCP. Distributed auth systems.",
+      "",
+      "I care about: correctness over cleverness, observability, and shipping.",
+      "I write about what I build at Medium (@inengiyeemmanuel).",
+    ],
+    skills: () => [
+      "─── Languages ────────────────────",
+      "  Go          ████████████░░  90%",
+      "  Python       ██████████░░░░  75%",
+      "  TypeScript   ██████████░░░░  75%",
+      "─── Backend ──────────────────────",
+      "  NestJS · FastAPI · Express · Django · Gin",
+      "─── Infra ────────────────────────",
+      "  PostgreSQL · Redis · Docker · GCP",
+      "  Nginx · Keycloak · InfluxDB · EMQX",
+      "─── Observability ────────────────",
+      "  Prometheus · Grafana · Jaeger · Loki",
+    ],
+    projects: () => [
+      "● Analytics App (staging)  — IoT platform @ GEUTech",
+      "● BitTorrent Client        — Go, built from scratch",
+      "● Tweet Audit              — CLI tool, Gemini AI",
+      "● GitHub Visualizer        — FastAPI + React/TS",
+      "",
+      "→ /projects for full details",
+    ],
+    uptime: () => {
+      const startYear = 2021;
+      const now = new Date();
+      const years = now.getFullYear() - startYear;
+      const months = now.getMonth();
+      return [
+        `System online since: ${startYear}`,
+        `Uptime: ${years} years, ${months} months`,
+        "Status: actively shipping",
+        "Memory: full of half-finished side projects",
+        "CPU: 94% backend, 6% frontend (reluctantly)",
+      ];
+    },
+    "ping grizz": () => [
+      "PING grizz.exe (inengiyeemmanuel@gmail.com)",
+      "64 bytes from grizz: icmp_seq=1 ttl=64 time=24ms",
+      "64 bytes from grizz: icmp_seq=2 ttl=64 time=21ms",
+      "",
+      "--- grizz ping statistics ---",
+      "2 packets transmitted, 2 received, 0% packet loss",
+      "Status: OPEN TO WORK · response time < 24h",
+    ],
+    contact: () => [
+      "email     → inengiyeemmanuel@gmail.com",
+      "github    → github.com/Inengs",
+      "linkedin  → linkedin.com/in/emmanuel-inengiye-3a206a289",
+      "x/twitter → x.com/inengiyeemmanuel",
+      "medium    → @inengiyeemmanuel",
+    ],
+    clear: () => "__CLEAR__",
+    sudo: () => "Nice try. You don't have root access here.",
+    exit: () => "__CLOSE__",
+    pwd: () => "/home/grizz/portfolio",
+    date: () => new Date().toString(),
+    echo: () => "...",
+    vim: () => "You opened vim. Good luck getting out. (hint: :q!)",
+    git: () => [
+      "On branch main",
+      "Your branch is up to date with 'origin/main'.",
+      "",
+      "nothing to commit, working tree clean",
+    ],
+    "git log": () => [
+      "commit a1b2c3d  HEAD → main",
+      "Author: Emmanuel Inengiye",
+      "Date:   just now",
+      "",
+      "    feat: ship another quiet system",
+    ],
+  };
+
+  function getOutput(cmd: string): string[] {
+    const trimmed = cmd.trim().toLowerCase();
+    const handler = COMMANDS[trimmed];
+    if (!handler) {
+      return [`command not found: ${cmd}`, "Type 'help' to see what's available."];
+    }
+    const result = handler();
+    if (result === "__CLEAR__") return ["__CLEAR__"];
+    if (result === "__CLOSE__") return ["__CLOSE__"];
+    return Array.isArray(result) ? result : [result];
+  }
+
+  function addLines(lines: string[], isCommand = false, commandText = "") {
+    const body = document.getElementById("terminal-body");
+    if (!body) return;
+
+    if (isCommand) {
+      const cmdLine = document.createElement("div");
+      cmdLine.className = "terminal-line command";
+      cmdLine.innerHTML = `<span class="terminal-prompt-inline">grizz@portfolio:~$</span> <span>${escapeHtml(commandText)}</span>`;
+      body.appendChild(cmdLine);
+    }
+
+    for (const line of lines) {
+      const div = document.createElement("div");
+      div.className = "terminal-line output";
+      div.textContent = line || " ";
+      body.appendChild(div);
+    }
+
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function escapeHtml(text: string): string {
+    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function terminalRun(cmd: string) {
+    const input = document.getElementById("terminal-input") as HTMLInputElement | null;
+    const body = document.getElementById("terminal-body");
+    if (!body) return;
+
+    const lines = getOutput(cmd);
+
+    if (lines[0] === "__CLEAR__") {
+      body.innerHTML = "";
+      return;
+    }
+
+    if (lines[0] === "__CLOSE__") {
+      closeTerminal();
+      return;
+    }
+
+    addLines(lines, true, cmd);
+    if (input) input.value = "";
+  }
+
+  // Expose globally for suggestion buttons
+  (window as any).terminalRun = terminalRun;
+
+  function openTerminal() {
+    const overlay = document.getElementById("terminal-overlay");
+    overlay?.classList.add("open");
+    setTimeout(() => {
+      const input = document.getElementById("terminal-input") as HTMLInputElement | null;
+      input?.focus();
+    }, 150);
+  }
+
+  function closeTerminal() {
+    const overlay = document.getElementById("terminal-overlay");
+    overlay?.classList.remove("open");
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("terminal-trigger")?.addEventListener("click", openTerminal);
+    document.getElementById("terminal-close")?.addEventListener("click", closeTerminal);
+
+    document.getElementById("terminal-overlay")?.addEventListener("click", (e) => {
+      if ((e.target as HTMLElement).id === "terminal-overlay") closeTerminal();
+    });
+
+    const input = document.getElementById("terminal-input") as HTMLInputElement | null;
+    input?.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        const cmd = input.value.trim();
+        if (cmd) terminalRun(cmd);
+        else input.value = "";
+      }
+    });
+
+    // Global "/" shortcut
+    document.addEventListener("keydown", (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement).tagName.toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
+      if (e.key === "/" || (e.key === "`" && !e.ctrlKey)) {
+        e.preventDefault();
+        openTerminal();
+      }
+      if (e.key === "Escape") closeTerminal();
+    });
+  });
+</script>
+
+<style>
+  /* ── Trigger button ──────────────────────────────── */
+  .terminal-trigger {
+    position: fixed;
+    bottom: 88px; /* above chatbot */
+    right: 24px;
+    z-index: 99;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+
+  .terminal-trigger:hover {
+    background: var(--accent);
+    color: var(--bg);
+    transform: translateY(-2px);
+  }
+
+  .terminal-icon { font-size: 13px; font-weight: 700; }
+  .terminal-hint { opacity: 0.6; font-size: 10px; }
+
+  /* ── Overlay ─────────────────────────────────────── */
+  .terminal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .terminal-overlay.open {
+    display: flex;
+  }
+
+  /* ── Window ──────────────────────────────────────── */
+  .terminal-window {
+    width: 100%;
+    max-width: 680px;
+    height: 460px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    font-family: var(--font-mono);
+  }
+
+  /* ── Header ──────────────────────────────────────── */
+  .terminal-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    gap: 12px;
+  }
+
+  .terminal-dots { display: flex; gap: 6px; }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot.red    { background: #ff5f57; }
+  .dot.yellow { background: #febc2e; }
+  .dot.green  { background: #28c840; }
+
+  .terminal-title {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+    color: #8b949e;
+    letter-spacing: 0.05em;
+  }
+
+  .terminal-close {
+    background: none;
+    border: none;
+    color: #8b949e;
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+    transition: color 0.15s;
+  }
+
+  .terminal-close:hover { color: #e6edf3; }
+
+  /* ── Body ────────────────────────────────────────── */
+  .terminal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    scrollbar-width: thin;
+    scrollbar-color: #30363d transparent;
+  }
+
+  .terminal-line {
+    font-size: 12.5px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .terminal-line.welcome .terminal-output {
+    color: #8b949e;
+  }
+
+  .terminal-line.welcome .highlight {
+    color: var(--accent, #2d6a4f);
+  }
+
+  .terminal-line.command {
+    color: #e6edf3;
+    margin-top: 8px;
+  }
+
+  .terminal-prompt-inline {
+    color: #3fb950;
+    margin-right: 6px;
+    user-select: none;
+  }
+
+  .terminal-line.output {
+    color: #8b949e;
+    padding-left: 0;
+  }
+
+  /* ── Input row ───────────────────────────────────── */
+  .terminal-input-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 18px;
+    border-top: 1px solid #30363d;
+    gap: 8px;
+    background: #0d1117;
+  }
+
+  .terminal-prompt {
+    color: #3fb950;
+    font-size: 12.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+  }
+
+  .terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #e6edf3;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    caret-color: #3fb950;
+  }
+
+  .terminal-input::placeholder {
+    color: #484f58;
+  }
+
+  /* ── Suggestions ─────────────────────────────────── */
+  .terminal-suggestions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 18px;
+    background: #161b22;
+    border-top: 1px solid #30363d;
+  }
+
+  .sug-label {
+    font-size: 10px;
+    color: #484f58;
+    font-family: var(--font-mono);
+    margin-right: 4px;
+  }
+
+  .terminal-suggestions button {
+    background: transparent;
+    border: 1px solid #30363d;
+    color: #8b949e;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .terminal-suggestions button:hover {
+    border-color: #3fb950;
+    color: #3fb950;
+  }
+
+  /* ── Mobile adjustments ──────────────────────────── */
+  @media (max-width: 768px) {
+    .terminal-trigger {
+      bottom: 80px;
+      right: 16px;
+    }
+
+    .terminal-window {
+      height: 400px;
+    }
+
+    .terminal-hint {
+      display: none;
+    }
+  }
+</style>

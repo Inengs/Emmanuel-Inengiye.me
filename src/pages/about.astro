@@ -27,7 +27,7 @@ import Navbar from '../components/Navbar.astro';
         <div class="highlights">
           <div class="highlight-item">
             <span class="label">Currently</span>
-            <span>Software Engineer @ GEUTech</span>
+            <span>Software Engineer @ GEUTech, Stoxava</span>
           </div>
           <div class="highlight-item">
             <span class="label">Based in</span>
@@ -121,5 +121,13 @@ import Navbar from '../components/Navbar.astro';
   .cta-link:hover {
     text-decoration: underline;
     text-underline-offset: 4px;
+  }
+
+   @media (max-width: 480px) {
+    .highlight-item {
+      flex-direction: column;
+      gap: 4px;
+    }
+    .label { width: auto; }
   }
 </style>
