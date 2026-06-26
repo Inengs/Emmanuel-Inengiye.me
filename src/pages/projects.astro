@@ -77,6 +77,8 @@ const projects = [
   // Add more projects here
 ];
 
+const sortedProjects = projects.sort((a, b) => Number(b.year) - Number(a.year));
+
 ---
 
 <Layout title="Projects">
@@ -91,7 +93,7 @@ const projects = [
       </div>
 
       <div class="projects-grid">
-        {projects.map((project) => (
+        {sortedProjects.map((project) => (
           <div class="project-card">
             <div class="card-header">
               <div class="project-title">&gt; {project.title}</div>
