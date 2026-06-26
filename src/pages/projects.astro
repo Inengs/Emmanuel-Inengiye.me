@@ -1,271 +1,403 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-
-const projects = [
-  {
-    title: "Analytics App",
-    slug: "adaptiq-test",
-    description: "Scalable IoT analytics platform with MQTT data ingestion, ML forecasting, and optimization analytics.",
-    tech: ["Node", "Postgres", "Redis", "Next.js", "Docker"],
-    year: "2025",
-    status: "Staging",
-    links: {
-      github: "https://github.com/Inengs/analytics-app",
-      live: "#"
-    }
-  },
-  {
-    title: "BitTorrent Client",
-    slug: "bittorrent-client",
-    description: "A BitTorrent CLI client built from scratch in Go: parses .torrent files, contacts trackers, connects to peers via TCP, and downloads files using the BitTorrent peer wire protocol.",
-    tech: ["Go"],
-    year: "2026",
-    status: "Internal",
-    links: {
-      github: "https://github.com/Inengs/bittorrent-client",
-    }
-  },
-  {
-    title: "Tweet audit",
-    slug: "tweetaudit",
-    description: "A CLI tool that audits your Twitter/X archive using Gemini AI and flags tweets for deletion based on your own criteria",
-    tech: ["Go", "Gemini API"],
-    year: "2026",
-    status: "Internal",
-    links: {
-      github: "https://github.com/Inengs/tweet-audit",
-      live: "#"
-    }
-  },
-  {
-    title: "TaskFlow",
-    slug: "taskflow",
-    description: "Full-stack real-time task manager (Go + React) with WebSockets, PostgreSQL, authentication, and secure REST APIs.",
-    tech: ["Go", "React", "Postgres"],
-    year: "2025",
-    status: "Internal",
-    links: {
-      github: "https://github.com/Inengs/realtime-task-app",
-      live: "#"
-    }
-  },
-  {
-    title: "Smart Gate App",
-    slug: "smartgate",
-    description: "Full-stack real-time task manager (Go + React) with WebSockets, PostgreSQL, authentication, and secure REST APIs.",
-    tech: ["Firebase", "React-Native"],
-    year: "2025",
-    status: "Internal",
-    links: {
-      github: "https://github.com/Inengs/Smart-Gate-App",
-      live: "https://drive.google.com/file/d/10Ujwi_uDs_Lqlb2G_ll1bY_f_5mYy5TM/view?usp=sharing"
-    }
-  },
-    {
-    title: "My Books Directory App",
-    slug: "booksdirectory",
-    description: "a full-stack web application for managing a collection of books!",
-    tech: ["MongoDB", "Express", "HTML", "CSS"],
-    year: "2024",
-    status: "Internal",
-    links: {
-      github: "https://github.com/Inengs/my-books-directory-app",
-      live: "https://my-books-directory-app.onrender.com/"
-    }
-  },
-  // Add more projects here
-];
-
 ---
 
-<Layout title="Projects">
-  <Navbar />
+<div class="chatbot-container">
+  <button class="chat-trigger" id="chat-trigger" aria-label="Open chat">
+    <span>&gt; chat with grizz</span>
+  </button>
 
-  <main>
-    <section class="projects-page">
-      <div class="page-header">
-        <div class="prompt">$ ls ~/projects</div>
-        <h1>Projects</h1>
-        <p class="intro">Things I've built that I'm proud of.</p>
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <div class="chat-title">
+        <span class="prompt">$</span> talking to grizz.exe
       </div>
+      <button class="close-btn" id="close-chat">×</button>
+    </div>
 
-      <div class="projects-grid">
-        {projects.map((project) => (
-          <div class="project-card">
-            <div class="card-header">
-              <div class="project-title">&gt; {project.title}</div>
-              <div class="project-year">{project.year}</div>
-            </div>
+    <div class="chat-messages" id="chat-messages"></div>
 
-            <p class="project-desc">{project.description}</p>
+    <div class="chat-input-area">
+      <input
+        type="text"
+        id="chat-input"
+        placeholder="ask me anything..."
+        autocomplete="off"
+      />
+      <button id="send-btn">→</button>
+    </div>
 
-            <div class="tech-stack">
-              {project.tech.map((tech) => (
-                <span class="tag">{tech}</span>
-              ))}
-            </div>
+    <div class="suggestions">
+      <span onclick="suggestQuestion(this)">what do you build?</span>
+      <span onclick="suggestQuestion(this)">are you open to work?</span>
+      <span onclick="suggestQuestion(this)">favorite tech?</span>
+      <span onclick="suggestQuestion(this)">how do I contact you?</span>
+    </div>
+  </div>
+</div>
 
-            <div class="card-footer">
-              <span class="status">{project.status}</span>
-              
-              <div class="project-links">
-                {project.links.github && (
-                  <a href={project.links.github} target="_blank" rel="noopener">github →</a>
-                )}
-                {project.links.live && (
-                  <a href={project.links.live} target="_blank" rel="noopener">live →</a>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  </main>
-</Layout>
+<script>
+  interface Intent {
+    keywords: string[];
+    response: string;
+  }
+
+  // Each intent has weighted keywords — more specific = higher score
+  const intents: Intent[] = [
+    {
+      keywords: ["who are you", "your name", "introduce", "tell me about yourself", "about you", "yourself"],
+      response: "I'm Emmanuel Inengiye — a backend engineer who loves building quiet, reliable systems. Nice to meet you!"
+    },
+    {
+      keywords: ["working on", "current project", "what are you building", "side project", "lately"],
+      response: "Right now I'm deep in distributed systems, IoT analytics at GEUTech, and building ficmart — a payment gateway in Go."
+    },
+    {
+      keywords: ["open to work", "hiring", "job", "opportunity", "available", "looking for work", "recruit", "position", "role"],
+      response: "Yes! I'm currently open to interesting opportunities — especially in backend, infrastructure, or developer tools. Remote preferred."
+    },
+    {
+      keywords: ["favorite tech", "stack", "tools", "languages", "what do you use", "tech stack", "programming language"],
+      response: "Go is my daily driver. Also love Python, TypeScript, and anything that helps me ship fast and sleep well at night."
+    },
+    {
+      keywords: ["hobby", "fun", "outside coding", "free time", "besides work", "interests"],
+      response: "Besides coding? I enjoy writing, contributing to open source, and occasionally pretending I understand distributed consensus algorithms."
+    },
+    {
+      keywords: ["contact", "reach", "email", "message you", "get in touch", "talk to emmanuel", "connect", "dm"],
+      response: "You can reach Emmanuel on LinkedIn or via email at inengiyeemmanuel@gmail.com. He's pretty responsive!"
+    },
+    {
+      keywords: ["iot", "internet of things", "adaptiq", "sensors", "embedded", "geutech"],
+      response: "IoT is close to my heart. I built and maintain ADAPTIQ — a production multi-tenant IoT analytics platform on GCP at GEUTech."
+    },
+    {
+      keywords: ["cloud", "gcp", "aws", "devops", "infrastructure", "kubernetes", "docker", "deployment"],
+      response: "Actively levelling up in cloud and DevOps. My cert roadmap is CCNA → AWS SAA → CKA. GCP is my main cloud right now."
+    },
+    {
+      keywords: ["golang", "go lang", "why go", "go programming"],
+      response: "Go is the favourite — fast, simple, and it compiles. Most of my serious projects start in Go. Built a BitTorrent client and a Raft consensus implementation in it."
+    },
+    {
+      keywords: ["python", "fastapi", "django"],
+      response: "Python is my second language — great for APIs and data-heavy work. FastAPI is my go-to framework there."
+    },
+    {
+      keywords: ["database", "postgres", "postgresql", "sql", "redis"],
+      response: "PostgreSQL is my default. I think a lot about data modelling, migrations, and query performance. Redis for caching and pub/sub."
+    },
+    {
+      keywords: ["open source", "github", "contribute", "contributions"],
+      response: "Open source matters to me. I've contributed to chaoss/augur and I enjoy building tools others can use."
+    },
+    {
+      keywords: ["background", "experience", "history", "oil", "gas", "career", "how did you start"],
+      response: "I came from the oil and gas industry — wellhead repairs, pipeline construction — before going all-in on software. Quite the pivot 🛠️"
+    },
+    {
+      keywords: ["projects", "build", "what do you make", "portfolio", "what have you built"],
+      response: "I've built a BitTorrent client in Go, a miniature Redis in Python, a Raft consensus implementation, IoT platforms, payment gateways, and financial APIs. I enjoy projects with real complexity."
+    },
+    {
+      keywords: ["location", "where are you", "based", "country", "nigeria", "timezone"],
+      response: "Based in Nigeria 🇳🇬, open to remote roles worldwide."
+    },
+    {
+      keywords: ["hire", "worth it", "should i hire", "why hire", "why you"],
+      response: "Emmanuel ships production-grade work and brings real engineering rigour to every project. Reach out and see for yourself!"
+    }
+  ];
+
+  // Score an input against an intent based on keyword matches
+  function scoreIntent(input: string, intent: Intent): number {
+    let score = 0;
+    for (const keyword of intent.keywords) {
+      if (input.includes(keyword)) {
+        // longer keyword match = more specific = higher weight
+        score += keyword.split(" ").length;
+      }
+    }
+    return score;
+  }
+
+  function getLocalResponse(input: string): string | null {
+    const lower = input.toLowerCase().trim();
+    let bestScore = 0;
+    let bestResponse: string | null = null;
+
+    for (const intent of intents) {
+      const score = scoreIntent(lower, intent);
+      if (score > bestScore) {
+        bestScore = score;
+        bestResponse = intent.response;
+      }
+    }
+
+    // Only trust local match if score is confident enough
+    return bestScore >= 1 ? bestResponse : null;
+  }
+
+  async function getGroqResponse(message: string): Promise<string> {
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+      if (!res.ok) throw new Error("API error");
+      const data = await res.json();
+      return data.reply || "Emmanuel would probably say: it depends on the context and tradeoffs 😌";
+    } catch {
+      return "Hmm, I couldn't reach my brain right now. Try asking Emmanuel directly — he's friendlier anyway 😄";
+    }
+  }
+
+  function addMessage(text: string, isUser = false): void {
+    const messages = document.getElementById("chat-messages") as HTMLDivElement | null;
+    if (!messages) return;
+    const msg = document.createElement("div");
+    msg.className = isUser ? "user-message" : "bot-message";
+    msg.textContent = text;
+    messages.appendChild(msg);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function addTypingIndicator(): HTMLDivElement {
+    const messages = document.getElementById("chat-messages") as HTMLDivElement;
+    const indicator = document.createElement("div");
+    indicator.className = "bot-message typing-indicator";
+    indicator.textContent = "...";
+    messages.appendChild(indicator);
+    messages.scrollTop = messages.scrollHeight;
+    return indicator;
+  }
+
+  async function handleMessage(text: string): Promise<void> {
+    addMessage(text, true);
+
+    // Try local keyword match first (instant)
+    const localReply = getLocalResponse(text);
+    if (localReply) {
+      setTimeout(() => addMessage(localReply), 400);
+      return;
+    }
+
+    // Fall back to Groq for anything unmatched
+    const indicator = addTypingIndicator();
+    const reply = await getGroqResponse(text);
+    indicator.remove();
+    addMessage(reply);
+  }
+
+  function suggestQuestion(el: HTMLElement): void {
+    const input = document.getElementById("chat-input") as HTMLInputElement | null;
+    if (input) {
+      input.value = el.textContent || "";
+      sendMessage();
+    }
+  }
+
+  (window as any).suggestQuestion = suggestQuestion;
+
+  function sendMessage(): void {
+    const input = document.getElementById("chat-input") as HTMLInputElement | null;
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    handleMessage(text);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const trigger = document.getElementById("chat-trigger");
+    const chatWindow = document.getElementById("chat-window");
+    const closeBtn = document.getElementById("close-chat");
+    const input = document.getElementById("chat-input") as HTMLInputElement | null;
+    const sendBtn = document.getElementById("send-btn");
+
+    if (!trigger || !chatWindow || !closeBtn) return;
+
+    trigger.addEventListener("click", () => {
+      chatWindow.classList.add("open");
+      input?.focus();
+      const messages = document.getElementById("chat-messages") as HTMLDivElement | null;
+      if (messages && messages.children.length === 0) {
+        setTimeout(() => addMessage("Hey there! I'm Grizz, Emmanuel's digital twin ⚡ What's up?"), 400);
+      }
+    });
+
+    closeBtn.addEventListener("click", () => chatWindow.classList.remove("open"));
+    sendBtn?.addEventListener("click", sendMessage);
+    input?.addEventListener("keypress", (e: KeyboardEvent) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  });
+</script>
 
 <style>
-  /* Desktop */
-  @media (min-width: 769px) {
-    main {
-      margin-left: 240px;
-      max-width: 720px;
-      padding: 60px 40px;
-    }
+  .chatbot-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
   }
 
-  /* Mobile adjustments per page */
-  @media (max-width: 768px) {
-    main {
-      padding: 32px 20px;
-    }
+  .chat-trigger {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 12px 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+    transition: all 0.2s;
   }
 
-  .projects-page {
-    max-width: 820px;
-  }
-
-  .page-header {
-    margin-bottom: 60px;
-  }
-
-  .prompt {
-    font-size: 13px;
-    color: var(--ink-dim);
-    margin-bottom: 8px;
-  }
-
-  h1 {
-    font-size: clamp(28px, 5vw, 42px);
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: var(--ink);
-  }
- 
-
-  .intro {
-    font-size: 15px;
-    color: var(--ink-muted);
-    max-width: 500px;
-  }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    gap: 28px;
-  }
-
-  .project-card {
-    border: 1px solid var(--border);
-    padding: 24px;
-    background: var(--bg);
-    transition: all 0.25s ease;
-  }
-
-  .project-card:hover {
-    border-color: var(--accent);
+  .chat-trigger:hover {
     transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(45, 106, 79, 0.4);
   }
 
-  .card-header {
+  .chat-window {
+    display: none;
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    width: 380px;
+    height: 520px;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    overflow: hidden;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .chat-window.open {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 16px;
   }
 
-  .project-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--ink);
-  }
-
-  .project-year {
-    font-size: 11px;
-    color: var(--ink-dim);
-    white-space: nowrap;
-  }
-
-  .project-desc {
-    font-size: 13.5px;
-    line-height: 1.65;
-    color: var(--ink-muted);
-    margin-bottom: 20px;
-  }
-
-  .tech-stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 24px;
-  }
-
-  .tag {
-    font-size: 10.5px;
-    padding: 2px 9px;
-    border: 1px solid var(--border);
-    color: var(--ink-muted);
-  }
-
-  .card-footer {
+  .chat-header {
+    background: var(--accent-bg);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11px;
+    font-size: 12px;
   }
 
-  .status {
-    color: var(--accent);
-    font-weight: 500;
+  .chat-title { color: var(--accent); font-weight: 700; }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--ink-muted);
   }
 
-  .project-links {
+  .chat-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
     display: flex;
-    gap: 16px;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 13px;
+    line-height: 1.5;
   }
 
-  .project-links a {
+  .bot-message {
+    align-self: flex-start;
+    background: var(--bg-secondary);
+    padding: 10px 14px;
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+    max-width: 85%;
+  }
+
+  .user-message {
+    align-self: flex-end;
+    background: var(--accent);
+    color: var(--bg);
+    padding: 10px 14px;
+    border-radius: 6px;
+    max-width: 80%;
+  }
+
+  .typing-indicator {
+    opacity: 0.6;
+    font-style: italic;
+    letter-spacing: 2px;
+  }
+
+  .chat-input-area {
+    padding: 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+
+  .chat-input-area input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 10px 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .chat-input-area button {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 0 18px;
+    cursor: pointer;
+  }
+
+  .suggestions {
+    padding: 8px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-secondary);
+  }
+
+  .suggestions span {
+    font-size: 10.5px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--ink-muted);
+    cursor: pointer;
+    border-radius: 2px;
+  }
+
+  .suggestions span:hover {
+    background: var(--accent-bg);
     color: var(--accent);
-    transition: opacity 0.2s;
-    text-decoration: none;
   }
 
-  .project-links a:hover {
-    opacity: 0.7;
-  }
-
-  /* ── Responsive ──────────────────────────────────── */
-  @media (max-width: 768px) {
-    .projects-grid {
-      grid-template-columns: 1fr;
-    }
-  }
- 
   @media (max-width: 480px) {
-    .card-header {
-      flex-direction: column;
-      gap: 4px;
+    .chatbot-container {
+      bottom: 16px;
+      right: 16px;
+    }
+
+    .chat-window {
+      width: calc(100vw - 32px);
+      right: 0;
+      height: 70vh;
+      max-height: 460px;
+    }
+
+    .chat-trigger span {
+      font-size: 11px;
     }
   }
 </style>
