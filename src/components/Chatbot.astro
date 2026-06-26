@@ -30,58 +30,170 @@
       <span onclick="suggestQuestion(this)">what do you build?</span>
       <span onclick="suggestQuestion(this)">are you open to work?</span>
       <span onclick="suggestQuestion(this)">favorite tech?</span>
-      <span onclick="suggestQuestion(this)">who are you?</span>
+      <span onclick="suggestQuestion(this)">how do I contact you?</span>
     </div>
   </div>
 </div>
 
 <script>
-  interface BotResponses {
-    [key: string]: string;
+  interface Intent {
+    keywords: string[];
+    response: string;
   }
 
-  const responses: BotResponses = {
-    greeting: "Hey there! I'm Grizz, Emmanuel's digital twin ⚡ What's up?",
-    "who are you": "I'm Emmanuel Inengiye — a backend engineer who loves building quiet, reliable systems. Nice to meet you!",
-    "what are you working on": "Right now I'm deep in distributed systems, IoT analytics at GEUTech, and growing my open source projects.",
-    "open to work": "Yes! I'm currently open to interesting opportunities — especially in backend, infrastructure, or developer tools.",
-    "favorite tech": "Go is my daily driver. Also love Python, TypeScript, and anything that helps me ship fast and sleep well at night.",
-    "hobbies": "Besides coding? I enjoy writing, contributing to open source, and occasionally pretending I understand distributed consensus algorithms.",
-    "what projects do you like to work on": "Mostly IoT based projects, but i enjoy coding generally, so I would probably like to try out new projects",
-    default: "Interesting question! I'm still learning, but Emmanuel would probably say: it depends on the context and tradeoffs 😌"
-  };
+  // Each intent has weighted keywords — more specific = higher score
+  const intents: Intent[] = [
+    {
+      keywords: ["who are you", "your name", "introduce", "tell me about yourself", "about you", "yourself"],
+      response: "I'm Emmanuel Inengiye — a backend engineer who loves building quiet, reliable systems. Nice to meet you!"
+    },
+    {
+      keywords: ["working on", "current project", "what are you building", "side project", "lately"],
+      response: "Right now I'm deep in distributed systems, IoT analytics at GEUTech, and building ficmart — a payment gateway in Go."
+    },
+    {
+      keywords: ["open to work", "hiring", "job", "opportunity", "available", "looking for work", "recruit", "position", "role"],
+      response: "Yes! I'm currently open to interesting opportunities — especially in backend, infrastructure, or developer tools. Remote preferred."
+    },
+    {
+      keywords: ["favorite tech", "stack", "tools", "languages", "what do you use", "tech stack", "programming language"],
+      response: "Go is my daily driver. Also love Python, TypeScript, and anything that helps me ship fast and sleep well at night."
+    },
+    {
+      keywords: ["hobby", "fun", "outside coding", "free time", "besides work", "interests"],
+      response: "Besides coding? I enjoy writing, contributing to open source, and occasionally pretending I understand distributed consensus algorithms."
+    },
+    {
+      keywords: ["contact", "reach", "email", "message you", "get in touch", "talk to emmanuel", "connect", "dm"],
+      response: "You can reach Emmanuel on LinkedIn or via email at inengiyeemmanuel@gmail.com. He's pretty responsive!"
+    },
+    {
+      keywords: ["iot", "internet of things", "adaptiq", "sensors", "embedded", "geutech"],
+      response: "IoT is close to my heart. I built and maintain ADAPTIQ — a production multi-tenant IoT analytics platform on GCP at GEUTech."
+    },
+    {
+      keywords: ["cloud", "gcp", "aws", "devops", "infrastructure", "kubernetes", "docker", "deployment"],
+      response: "Actively levelling up in cloud and DevOps. My cert roadmap is CCNA → AWS SAA → CKA. GCP is my main cloud right now."
+    },
+    {
+      keywords: ["golang", "go lang", "why go", "go programming"],
+      response: "Go is the favourite — fast, simple, and it compiles. Most of my serious projects start in Go. Built a BitTorrent client and a Raft consensus implementation in it."
+    },
+    {
+      keywords: ["python", "fastapi", "django"],
+      response: "Python is my second language — great for APIs and data-heavy work. FastAPI is my go-to framework there."
+    },
+    {
+      keywords: ["database", "postgres", "postgresql", "sql", "redis"],
+      response: "PostgreSQL is my default. I think a lot about data modelling, migrations, and query performance. Redis for caching and pub/sub."
+    },
+    {
+      keywords: ["open source", "github", "contribute", "contributions"],
+      response: "Open source matters to me. I've contributed to chaoss/augur and I enjoy building tools others can use."
+    },
+    {
+      keywords: ["background", "experience", "history", "oil", "gas", "career", "how did you start"],
+      response: "I came from the oil and gas industry — wellhead repairs, pipeline construction — before going all-in on software. Quite the pivot 🛠️"
+    },
+    {
+      keywords: ["projects", "build", "what do you make", "portfolio", "what have you built"],
+      response: "I've built a BitTorrent client in Go, a miniature Redis in Python, a Raft consensus implementation, IoT platforms, payment gateways, and financial APIs. I enjoy projects with real complexity."
+    },
+    {
+      keywords: ["location", "where are you", "based", "country", "nigeria", "timezone"],
+      response: "Based in Nigeria 🇳🇬, open to remote roles worldwide."
+    },
+    {
+      keywords: ["hire", "worth it", "should i hire", "why hire", "why you"],
+      response: "Emmanuel ships production-grade work and brings real engineering rigour to every project. Reach out and see for yourself!"
+    }
+  ];
+
+  // Score an input against an intent based on keyword matches
+  function scoreIntent(input: string, intent: Intent): number {
+    let score = 0;
+    for (const keyword of intent.keywords) {
+      if (input.includes(keyword)) {
+        // longer keyword match = more specific = higher weight
+        score += keyword.split(" ").length;
+      }
+    }
+    return score;
+  }
+
+  function getLocalResponse(input: string): string | null {
+    const lower = input.toLowerCase().trim();
+    let bestScore = 0;
+    let bestResponse: string | null = null;
+
+    for (const intent of intents) {
+      const score = scoreIntent(lower, intent);
+      if (score > bestScore) {
+        bestScore = score;
+        bestResponse = intent.response;
+      }
+    }
+
+    // Only trust local match if score is confident enough
+    return bestScore >= 1 ? bestResponse : null;
+  }
+
+  async function getGroqResponse(message: string): Promise<string> {
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+      if (!res.ok) throw new Error("API error");
+      const data = await res.json();
+      return data.reply || "Emmanuel would probably say: it depends on the context and tradeoffs 😌";
+    } catch {
+      return "Hmm, I couldn't reach my brain right now. Try asking Emmanuel directly — he's friendlier anyway 😄";
+    }
+  }
 
   function addMessage(text: string, isUser = false): void {
-    const messages = document.getElementById('chat-messages') as HTMLDivElement | null;
+    const messages = document.getElementById("chat-messages") as HTMLDivElement | null;
     if (!messages) return;
-    const msg = document.createElement('div');
-    msg.className = isUser ? 'user-message' : 'bot-message';
+    const msg = document.createElement("div");
+    msg.className = isUser ? "user-message" : "bot-message";
     msg.textContent = text;
     messages.appendChild(msg);
     messages.scrollTop = messages.scrollHeight;
   }
 
-  function getBotResponse(input: string): string {
-    const lower = input.toLowerCase();
-    if (lower.includes('hi') || lower.includes('hello') || lower.includes('hey'))
-      return responses.greeting;
-    if (lower.includes('who are you') || lower.includes('your name'))
-      return responses["who are you"];
-    if (lower.includes('working on') || lower.includes('projects'))
-      return responses["what are you working on"];
-    if (lower.includes('open to work') || lower.includes('hiring') || lower.includes('job'))
-      return responses["open to work"];
-    if (lower.includes('tech') || lower.includes('stack') || lower.includes('favorite'))
-      return responses["favorite tech"];
-    if (lower.includes('hobby') || lower.includes('fun'))
-      return responses.hobbies;
-    return responses.default;
+  function addTypingIndicator(): HTMLDivElement {
+    const messages = document.getElementById("chat-messages") as HTMLDivElement;
+    const indicator = document.createElement("div");
+    indicator.className = "bot-message typing-indicator";
+    indicator.textContent = "...";
+    messages.appendChild(indicator);
+    messages.scrollTop = messages.scrollHeight;
+    return indicator;
+  }
+
+  async function handleMessage(text: string): Promise<void> {
+    addMessage(text, true);
+
+    // Try local keyword match first (instant)
+    const localReply = getLocalResponse(text);
+    if (localReply) {
+      setTimeout(() => addMessage(localReply), 400);
+      return;
+    }
+
+    // Fall back to Groq for anything unmatched
+    const indicator = addTypingIndicator();
+    const reply = await getGroqResponse(text);
+    indicator.remove();
+    addMessage(reply);
   }
 
   function suggestQuestion(el: HTMLElement): void {
-    const input = document.getElementById('chat-input') as HTMLInputElement | null;
+    const input = document.getElementById("chat-input") as HTMLInputElement | null;
     if (input) {
-      input.value = el.textContent || '';
+      input.value = el.textContent || "";
       sendMessage();
     }
   }
@@ -89,40 +201,36 @@
   (window as any).suggestQuestion = suggestQuestion;
 
   function sendMessage(): void {
-    const input = document.getElementById('chat-input') as HTMLInputElement | null;
+    const input = document.getElementById("chat-input") as HTMLInputElement | null;
     if (!input) return;
     const text = input.value.trim();
     if (!text) return;
-    addMessage(text, true);
-    input.value = '';
-    setTimeout(() => {
-      const reply = getBotResponse(text);
-      addMessage(reply);
-    }, 650);
+    input.value = "";
+    handleMessage(text);
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const trigger = document.getElementById('chat-trigger');
-    const chatWindow = document.getElementById('chat-window');
-    const closeBtn = document.getElementById('close-chat');
-    const input = document.getElementById('chat-input') as HTMLInputElement | null;
-    const sendBtn = document.getElementById('send-btn');
+  document.addEventListener("DOMContentLoaded", () => {
+    const trigger = document.getElementById("chat-trigger");
+    const chatWindow = document.getElementById("chat-window");
+    const closeBtn = document.getElementById("close-chat");
+    const input = document.getElementById("chat-input") as HTMLInputElement | null;
+    const sendBtn = document.getElementById("send-btn");
 
     if (!trigger || !chatWindow || !closeBtn) return;
 
-    trigger.addEventListener('click', () => {
-      chatWindow.classList.add('open');
+    trigger.addEventListener("click", () => {
+      chatWindow.classList.add("open");
       input?.focus();
-      const messages = document.getElementById('chat-messages') as HTMLDivElement | null;
+      const messages = document.getElementById("chat-messages") as HTMLDivElement | null;
       if (messages && messages.children.length === 0) {
-        setTimeout(() => addMessage(responses.greeting), 400);
+        setTimeout(() => addMessage("Hey there! I'm Grizz, Emmanuel's digital twin ⚡ What's up?"), 400);
       }
     });
 
-    closeBtn.addEventListener('click', () => chatWindow.classList.remove('open'));
-    sendBtn?.addEventListener('click', sendMessage);
-    input?.addEventListener('keypress', (e: KeyboardEvent) => {
-      if (e.key === 'Enter') sendMessage();
+    closeBtn.addEventListener("click", () => chatWindow.classList.remove("open"));
+    sendBtn?.addEventListener("click", sendMessage);
+    input?.addEventListener("keypress", (e: KeyboardEvent) => {
+      if (e.key === "Enter") sendMessage();
     });
   });
 </script>
@@ -221,6 +329,12 @@
     max-width: 80%;
   }
 
+  .typing-indicator {
+    opacity: 0.6;
+    font-style: italic;
+    letter-spacing: 2px;
+  }
+
   .chat-input-area {
     padding: 12px;
     border-top: 1px solid var(--border);
@@ -269,7 +383,6 @@
     color: var(--accent);
   }
 
-  /* ── Responsive ──────────────────────────────────── */
   @media (max-width: 480px) {
     .chatbot-container {
       bottom: 16px;
