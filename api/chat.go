@@ -37,9 +37,9 @@ type GroqMessage struct {
 }
 
 type GroqRequest struct {
-	Model    string        `json:"model"`
-	Messages []GroqMessage `json:"messages"`
-	MaxTokens int          `json:"max_tokens"`
+	Model     string        `json:"model"`
+	Messages  []GroqMessage `json:"messages"`
+	MaxTokens int           `json:"max_tokens"`
 }
 
 type GroqChoice struct {
@@ -99,12 +99,17 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 
 	respBody, _ := io.ReadAll(resp.Body)
+
+	// Temporary debug: return raw Groq response
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(respBody)
+	return
+
 	var groqResp GroqResponse
 	if err := json.Unmarshal(respBody, &groqResp); err != nil || len(groqResp.Choices) == 0 {
 		http.Error(w, "Invalid Groq response", http.StatusBadGateway)
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, `{"reply": %q}`, groqResp.Choices[0].Message.Content)
 }
