@@ -29,13 +29,21 @@ const currentPath = Astro.url.pathname;
   </div>
 </div>
 
-<!-- Overlay for mobile drawer -->
+<!-- Desktop floating menu button (shows when sidebar collapsed) -->
+<button class="menu-fab" id="menu-fab" aria-label="Open navigation">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- Overlay for drawer -->
 <div class="nav-overlay" id="nav-overlay"></div>
 
-<nav class="sidebar" id="sidebar">
+<nav class="sidebar collapsed" id="sidebar">
   <div class="nav-inner">
-    <!-- Logo -->
-    <a href="/" class="nav-logo desktop-logo">&gt; Inengs.me</a>
+    <!-- Logo + collapse button -->
+    <div class="nav-top">
+      <a href="/" class="nav-logo desktop-logo">&gt; Inengs.me</a>
+      <button class="collapse-btn" id="collapse-btn" aria-label="Close navigation">×</button>
+    </div>
 
     <!-- Navigation Links -->
     <ul class="nav-links">
@@ -57,8 +65,8 @@ const currentPath = Astro.url.pathname;
       onclick="window.__toggleTheme()"
       aria-label="Toggle theme"
     >
-    <span class="sun-icon">☀️</span>
-    <span class="moon-icon" style="display:none">🌙</span>
+      <span class="sun-icon">☀️</span>
+      <span class="moon-icon" style="display:none">🌙</span>
     </button>
 
     <!-- Social Links -->
@@ -95,33 +103,44 @@ const currentPath = Astro.url.pathname;
 
 <script>
   const hamburger = document.getElementById('hamburger');
+  const menuFab = document.getElementById('menu-fab');
+  const collapseBtn = document.getElementById('collapse-btn');
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('nav-overlay');
- 
+
   function openMenu() {
     sidebar?.classList.add('open');
+    sidebar?.classList.remove('collapsed');
     overlay?.classList.add('visible');
     document.body.style.overflow = 'hidden';
   }
- 
+
   function closeMenu() {
     sidebar?.classList.remove('open');
+    sidebar?.classList.add('collapsed');
     overlay?.classList.remove('visible');
     document.body.style.overflow = '';
   }
- 
+
   hamburger?.addEventListener('click', openMenu);
+  menuFab?.addEventListener('click', openMenu);
+  collapseBtn?.addEventListener('click', closeMenu);
   overlay?.addEventListener('click', closeMenu);
- 
-  // Close on nav link click (mobile)
+
+  // Close on nav link click
   sidebar?.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', closeMenu);
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
   });
 </script>
 
 
 <style>
-  /* ── Desktop sidebar ─────────────────────────────── */
+  /* ── Sidebar (drawer on all sizes) ───────────────── */
   .sidebar {
     position: fixed;
     left: 0;
@@ -130,11 +149,20 @@ const currentPath = Astro.url.pathname;
     width: 240px;
     background-color: var(--bg);
     border-right: 1px solid var(--border);
-    z-index: 50;
-    padding: 32px 24px;
+    z-index: 55;
+    padding: 28px 24px;
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease;
+  }
+
+  /* Collapsed = slid off-screen */
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
   }
 
   .nav-inner {
@@ -143,16 +171,34 @@ const currentPath = Astro.url.pathname;
     height: 100%;
   }
 
+  .nav-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+
   .nav-logo {
     font-weight: 700;
     font-size: 13px;
     color: var(--ink);
-    margin-bottom: 32px;
     transition: color 0.2s;
     text-decoration: none;
   }
 
   .nav-logo:hover { color: var(--accent); }
+
+  .collapse-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--ink-muted);
+    cursor: pointer;
+    padding: 0 4px;
+  }
+
+  .collapse-btn:hover { color: var(--ink); }
 
   .nav-links {
     list-style: none;
@@ -184,14 +230,16 @@ const currentPath = Astro.url.pathname;
     padding-left: 10px;
   }
 
+  /* ── Smaller theme toggle ────────────────────────── */
   .theme-toggle {
     background: none;
     border: 1px solid var(--border);
-    font-size: 16px;
-    padding: 8px 12px;
+    font-size: 12px;          /* was 16px — smaller icon */
+    line-height: 1;
+    padding: 5px 8px;         /* tighter */
     cursor: pointer;
     align-self: flex-start;
-    border-radius: 6px;
+    border-radius: 5px;
     transition: all 0.2s;
     margin-bottom: auto;
   }
@@ -201,7 +249,43 @@ const currentPath = Astro.url.pathname;
     transform: scale(1.05);
   }
 
-  /* bottom social section */
+  /* ── Floating "open menu" button (desktop) ───────── */
+  .menu-fab {
+    position: fixed;
+    top: 22px;
+    left: 22px;
+    z-index: 52;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 11px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .menu-fab:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .menu-fab span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--ink);
+  }
+
+  /* Hide the desktop fab while the sidebar is open */
+  .sidebar.open ~ .menu-fab,
+  body:has(.sidebar.open) .menu-fab {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ── Bottom social section ───────────────────────── */
   .bottom-section {
     padding-top: 20px;
     border-top: 1px solid var(--border);
@@ -212,13 +296,7 @@ const currentPath = Astro.url.pathname;
     display: flex;
     align-items: center;
     gap: 12px;
-    flex-wrap: wrap;            /* Optional: wrap if screen is very small */
-  }
-
-  .social-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-wrap: wrap;
   }
 
   .avatar {
@@ -255,14 +333,8 @@ const currentPath = Astro.url.pathname;
     display: block;
   }
 
-  /* brand colors */
-  .github {
-    filter: invert(1);
-  }
-
-  :global(:root:not(.dark)) .github {
-    filter: invert(0);
-  }
+  .github { filter: invert(1); }
+  :global(:root:not(.dark)) .github { filter: invert(0); }
 
   .linkedin {
     filter: invert(35%) sepia(80%) saturate(500%) hue-rotate(175deg) brightness(90%);
@@ -272,13 +344,8 @@ const currentPath = Astro.url.pathname;
     filter: invert(30%) sepia(80%) saturate(800%) hue-rotate(290deg) brightness(90%);
   }
 
-  .x-icon {
-    color: var(--ink);
-  }
-
-  .resume-icon {
-    color: var(--accent);
-  }
+  .x-icon { color: var(--ink); }
+  .resume-icon { color: var(--accent); }
 
   /* ── Mobile top bar ──────────────────────────────── */
   .mobile-topbar {
@@ -295,19 +362,19 @@ const currentPath = Astro.url.pathname;
     align-items: center;
     justify-content: space-between;
   }
- 
+
   .mobile-right {
     display: flex;
     align-items: center;
     gap: 12px;
   }
- 
+
   .mobile-theme {
     margin-bottom: 0;
-    padding: 6px 10px;
-    font-size: 14px;
+    padding: 5px 8px;
+    font-size: 12px;
   }
- 
+
   .hamburger {
     background: none;
     border: 1px solid var(--border);
@@ -318,7 +385,7 @@ const currentPath = Astro.url.pathname;
     flex-direction: column;
     gap: 4px;
   }
- 
+
   .hamburger span {
     display: block;
     width: 18px;
@@ -326,7 +393,7 @@ const currentPath = Astro.url.pathname;
     background: var(--ink);
     transition: all 0.2s;
   }
- 
+
   .nav-overlay {
     display: none;
     position: fixed;
@@ -336,37 +403,27 @@ const currentPath = Astro.url.pathname;
     opacity: 0;
     transition: opacity 0.3s;
   }
- 
+
   .nav-overlay.visible {
+    display: block;
     opacity: 1;
   }
- 
+
   .desktop-logo { display: block; }
   .mobile-theme { display: none; }
- 
+
   /* ── Responsive breakpoint ───────────────────────── */
   @media (max-width: 768px) {
     .mobile-topbar { display: flex; }
-    .desktop-logo { display: none; }
+    .menu-fab { display: none; }      /* mobile uses hamburger in topbar */
     .desktop-theme { display: none; }
     .mobile-theme { display: block; }
-    .nav-overlay { display: block; }
- 
+
     .sidebar {
-      transform: translateX(-100%);
       top: 0;
-      z-index: 55;
+      z-index: 56;
       width: 260px;
       padding-top: 20px;
-    }
- 
-    .sidebar.open {
-      transform: translateX(0);
-    }
- 
-    .desktop-logo {
-      display: block;
-      margin-top: 8px;
     }
   }
 </style>

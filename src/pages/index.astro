@@ -6,167 +6,284 @@ import Navbar from '../components/Navbar.astro';
 <Layout title="Emmanuel Inengiye">
   <Navbar />
 
-  <main>
+  <main class="hero-main">
     <section class="hero">
-      <div class="prompt">$ whoami</div>
+      <!-- Availability pill -->
+      <div class="availability">
+        <span class="status-dot"></span>
+        Available for New Projects
+      </div>
 
-      <h1>Emmanuel Inengiye</h1>
+      <!-- Big split name with portrait in the middle -->
+      <div class="name-stage">
+        <h1 class="display-name">
+          <span class="name-line line-top">EMMANUEL</span>
+          <span class="name-line line-bottom">INENGIYE</span>
+        </h1>
 
-      <p class="tagline">
-        <span id="typed"></span><span class="cursor"></span>
-      </p>
+        <div class="portrait-wrap">
+          <img src="/profile-hero.png" alt="Emmanuel Inengiye" class="portrait" />
+        </div>
+      </div>
 
-      <p class="bio">
-        i build reliable systems in go, python and typescript
-      </p>
+      <!-- Bottom content row -->
+      <div class="hero-footer">
+        <div class="hero-intro">
+          <h2 class="role">Backend Engineer</h2>
+          <p class="role-desc">
+            Building quiet, reliable systems that scale &mdash;
+            distributed systems, IoT platforms &amp; developer tools.
+          </p>
+          <a href="mailto:inengiyeemmanuel@gmail.com" class="cta-btn">
+            Let&rsquo;s collaborate <span class="arrow">&#8599;</span>
+          </a>
+        </div>
 
-      <div class="links">
-        <a href="/projects">&gt; see my work</a>
-        <a href="mailto:inengiyeemmanuel@gmail.com">&gt; get in touch</a>
+        <div class="hero-socials">
+          <a href="https://github.com/Inengs" target="_blank" rel="noopener" class="social-pill">
+            <span>GitHub</span>
+          </a>
+          <a href="https://linkedin.com/in/emmanuel-inengiye-3a206a289" target="_blank" rel="noopener" class="social-pill">
+            <span>LinkedIn</span>
+          </a>
+          <a href="https://x.com/inengiyeemmanuel" target="_blank" rel="noopener" class="social-pill">
+            <span>X / Twitter</span>
+          </a>
+          <a href="https://instagram.com/_inengs/" target="_blank" rel="noopener" class="social-pill">
+            <span>Instagram</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
 </Layout>
 
-<script>
-  const phrases = [
-    "backend engineer",
-    "systems engineer",
-    "open source contributor",
-  ];
-
-  let phraseIndex = 0;
-  let charIndex = 0;
-  let deleting = false;
-  const el = document.getElementById("typed");
-
-  function tick() {
-    if (!el) return;
-    const current = phrases[phraseIndex];
-
-    if (!deleting) {
-      charIndex++;
-      el.textContent = current.slice(0, charIndex);
-      if (charIndex === current.length) {
-        deleting = true;
-        setTimeout(tick, 1800);
-        return;
-      }
-      setTimeout(tick, 80);
-    } else {
-      charIndex--;
-      el.textContent = current.slice(0, charIndex);
-      if (charIndex === 0) {
-        deleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-        setTimeout(tick, 400);
-        return;
-      }
-      setTimeout(tick, 45);
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", () => tick());
-</script>
-
 <style>
-  /* main {
-    margin-left: 240px;
+  /* The hero owns the whole viewport; kill the default sidebar offset
+     because the collapsible navbar floats over the hero instead. */
+  .hero-main {
+    margin-left: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
     min-height: 100vh;
     display: flex;
-    align-items: center;
-    padding: 0 60px;
-  } */
+  }
 
   .hero {
+    position: relative;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    max-width: 680px;
+    justify-content: space-between;
+    padding: 88px clamp(24px, 5vw, 72px) clamp(32px, 5vh, 56px);
+    min-height: 100vh;
+    overflow: hidden;
   }
 
-  .prompt {
-    font-size: 12px;
-    color: var(--ink-dim);
-    letter-spacing: 0.06em;
+  /* ── Availability pill ─────────────────────────────── */
+  .availability {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink);
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg);
   }
 
-  h1 {
-    font-size: clamp(28px, 5vw, 48px);
-    font-weight: 700;
-    line-height: 1.05;
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+  }
+
+  /* ── Name + portrait stage ─────────────────────────── */
+  .name-stage {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .display-name {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    text-align: center;
+    line-height: 0.86;
+    margin: 0;
+    letter-spacing: -0.02em;
+    font-weight: 800;
+    text-transform: uppercase;
+    /* Scales the whole treatment fluidly */
+    font-size: clamp(56px, 15.5vw, 220px);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .name-line {
+    display: block;
+    white-space: nowrap;
+  }
+
+  /* Outlined top line */
+  .line-top {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--ink);
+  }
+
+  /* Solid bottom line */
+  .line-bottom {
     color: var(--ink);
   }
 
-  .tagline {
-    font-size: clamp(14px, 2vw, 18px);
-    color: var(--accent);
-    font-weight: 500;
-    min-height: 1.5em;
-  }
-
-  .cursor {
-    display: inline-block;
-    width: 3px;
-    height: 0.85em;
-    background: var(--accent);
-    vertical-align: middle;
-    margin-left: 6px;
-    animation: blink 1s step-end infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-
-  .tagline {
-    font-size: 13px;
-    color: var(--ink-muted);
-  }
-
-  .bio {
-    font-size: 14px;
-    color: var(--ink-muted);
-    max-width: 560px;
-    line-height: 1.8;
-  }
-
-  .links {
+  /* Portrait floats centered, overlapping both name lines */
+  .portrait-wrap {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(220px, 34vw, 460px);
+    aspect-ratio: 3 / 4;
     display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .portrait {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    /* Soft fade at the base so it melts into the layout like the reference */
+    -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+    filter: grayscale(1) contrast(1.02);
+  }
+
+  /* ── Footer row ────────────────────────────────────── */
+  .hero-footer {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
     flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 8px;
   }
 
-  .links a {
-    font-size: 12px;
+  .hero-intro {
+    max-width: 340px;
+  }
+
+  .role {
+    font-size: clamp(18px, 2.4vw, 24px);
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 8px;
+  }
+
+  .role-desc {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    margin: 0 0 20px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 22px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+
+  .cta-btn .arrow { font-size: 14px; }
+
+  /* Social pills bottom-right */
+  .hero-socials {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .social-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 130px;
+    padding: 9px 18px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .social-pill:hover {
+    border-color: var(--accent);
     color: var(--accent);
-    transition: opacity 0.2s;
+    transform: translateX(-2px);
   }
 
-  .links a:hover { opacity: 0.7; }
-
-  .section-label {
-    font-size: 11px;
-    color: var(--ink-dim);
-    letter-spacing: 0.08em;
-  }
-
-  /* ── Responsive ──────────────────────────────────── */
-  /* Desktop */
-  @media (min-width: 769px) {
-    main {
-      margin-left: 240px;
-      max-width: 720px;
-      padding: 60px 40px;
-    }
-  }
-
-  /* Mobile adjustments per page */
+  /* ── Responsive ────────────────────────────────────── */
   @media (max-width: 768px) {
-    main {
-      padding: 32px 20px;
+    .hero {
+      padding: 72px 20px 28px;
     }
+
+    .display-name {
+      font-size: clamp(44px, 19vw, 120px);
+    }
+
+    .portrait-wrap {
+      width: clamp(180px, 56vw, 300px);
+    }
+
+    .hero-footer {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 28px;
+    }
+
+    .hero-socials {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .social-pill {
+      min-width: 0;
+      flex: 1 1 45%;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .display-name { line-height: 0.92; }
+    .portrait-wrap { width: 62vw; }
   }
 </style>

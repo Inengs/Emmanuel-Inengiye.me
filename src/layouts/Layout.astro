@@ -53,11 +53,22 @@ const {
 </html>
 
 <style is:global>
-  /* Desktop sidebar spacing */
+  /* Inner pages keep a comfortable reading column, centered,
+     since the sidebar is now a floating drawer (no permanent offset). */
   @media (min-width: 769px) {
     main {
-      margin-left: 240px;
+      margin-left: 0;
+      max-width: 760px;
+      margin-inline: auto;
+      padding: 72px 40px;
     }
+  }
+
+  /* The full-bleed hero opts out of the centered column above. */
+  main.hero-main {
+    max-width: none;
+    margin: 0;
+    padding: 0;
   }
 
   /* Mobile */
@@ -70,6 +81,10 @@ const {
       margin-left: 0 !important;
       padding: 40px 20px !important;
       max-width: 100% !important;
+    }
+
+    body main.hero-main {
+      padding: 0 !important;
     }
   }
 
