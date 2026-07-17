@@ -20,8 +20,20 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark light" />
     <link rel="icon" type="image/png" href="/my-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <title>{title}</title>
+
+    <!-- Applies the saved theme before first paint so there's no flash -->
+    <script is:inline>
+      (function () {
+        const saved = localStorage.getItem("theme");
+        const isDark = saved ? saved === "dark" : true;
+        document.documentElement.classList.toggle("dark", isDark);
+      })();
+    </script>
   </head>
   <body>
     <slot />
@@ -35,8 +47,8 @@ const {
         document.querySelectorAll('[aria-label="Toggle theme"]').forEach(btn => {
           const sun = btn.querySelector(".sun-icon") as HTMLElement | null;
           const moon = btn.querySelector(".moon-icon") as HTMLElement | null;
-          if (sun) sun.style.display = isDark ? "none" : "inline";
-          if (moon) moon.style.display = isDark ? "inline" : "none";
+          if (sun) sun.style.display = isDark ? "inline" : "none";
+          if (moon) moon.style.display = isDark ? "none" : "inline";
         });
       }
 
@@ -47,53 +59,30 @@ const {
         syncToggle();
       };
 
+      syncToggle();
       document.addEventListener("DOMContentLoaded", syncToggle);
     </script>
   </body>
 </html>
 
 <style is:global>
-  /* Inner pages keep a comfortable reading column, centered,
-     since the sidebar is now a floating drawer (no permanent offset). */
-  @media (min-width: 769px) {
-    main {
-      margin-left: 0;
-      max-width: 760px;
-      margin-inline: auto;
-      padding: 72px 40px;
-    }
+  /* The nav is a sticky top bar now, so no page needs a left offset.
+     Each page owns its own width via .page-shell. */
+  main {
+    display: block;
   }
 
-  /* The full-bleed hero opts out of the centered column above. */
+  /* The hero opts out of the standard page padding. */
   main.hero-main {
-    max-width: none;
-    margin: 0;
     padding: 0;
+    margin: 0;
+    max-width: none;
   }
 
-  /* Mobile */
-  @media (max-width: 768px) {
-    body {
-      padding-top: 56px;
-    }
-
-    main {
-      margin-left: 0 !important;
-      padding: 40px 20px !important;
-      max-width: 100% !important;
-    }
-
-    body main.hero-main {
-      padding: 0 !important;
-    }
-  }
-
-  /* Ensure terminal trigger is visible */
   .terminal-trigger {
     z-index: 99 !important;
   }
 
-  /* Make sure overlay is on top */
   .terminal-overlay {
     z-index: 200 !important;
   }

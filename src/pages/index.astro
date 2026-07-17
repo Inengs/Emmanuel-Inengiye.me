@@ -1,6 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+
+const stack = ["Go", "Node.js", "Python", "PostgreSQL", "Redis", "Docker", "FastAPI", "AWS"];
 ---
 
 <Layout title="Emmanuel Inengiye">
@@ -11,7 +14,7 @@ import Navbar from '../components/Navbar.astro';
       <!-- Availability pill -->
       <div class="availability">
         <span class="status-dot"></span>
-        Available for New Projects
+        Open to backend &amp; infrastructure roles
       </div>
 
       <!-- Big split name with portrait in the middle -->
@@ -31,27 +34,30 @@ import Navbar from '../components/Navbar.astro';
         <div class="hero-intro">
           <h2 class="role">Backend Engineer</h2>
           <p class="role-desc">
-            Building quiet, reliable systems that scale &mdash;
-            distributed systems, IoT platforms &amp; developer tools.
+            I build quiet, reliable systems that scale &mdash; distributed
+            systems, IoT platforms &amp; developer tools.
           </p>
-          <a href="mailto:inengiyeemmanuel@gmail.com" class="cta-btn">
-            Let&rsquo;s collaborate <span class="arrow">&#8599;</span>
-          </a>
+          <div class="hero-actions">
+            <a href="/projects" class="btn btn-primary">View projects →</a>
+            <a href="mailto:inengiyeemmanuel@gmail.com" class="btn btn-secondary">
+              Let&rsquo;s collaborate <span class="arrow">&#8599;</span>
+            </a>
+          </div>
         </div>
 
+        <div class="stack-row">
+          {stack.map((s) => <span class="chip-outline">{s}</span>)}
+        </div>
       </div>
     </section>
   </main>
+
+  <Footer />
 </Layout>
 
 <style>
-  /* The hero owns the whole viewport; kill the default sidebar offset
-     because the collapsible navbar floats over the hero instead. */
   .hero-main {
-    margin-left: 0 !important;
-    max-width: none !important;
-    padding: 0 !important;
-    min-height: 100vh;
+    min-height: calc(100vh - var(--nav-h));
     display: flex;
   }
 
@@ -61,9 +67,14 @@ import Navbar from '../components/Navbar.astro';
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 88px clamp(24px, 5vw, 72px) clamp(32px, 5vh, 56px);
-    min-height: 100vh;
+    gap: 40px;
+    padding: 48px var(--gutter) clamp(32px, 5vh, 56px);
+    min-height: calc(100vh - var(--nav-h));
+    max-width: var(--page-max);
+    margin-inline: auto;
+    width: 100%;
     overflow: hidden;
+    animation: fadeUp 0.6s ease both;
   }
 
   /* ── Availability pill ─────────────────────────────── */
@@ -72,21 +83,20 @@ import Navbar from '../components/Navbar.astro';
     align-items: center;
     gap: 8px;
     align-self: flex-start;
-    font-size: 12.5px;
-    font-weight: 500;
-    color: var(--ink);
-    padding: 8px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-muted);
+    padding: 6px 14px;
     border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--bg);
+    border-radius: var(--radius-pill);
   }
 
   .status-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #22c55e;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+    background: var(--success);
+    animation: pulseDot 2.4s ease-in-out infinite;
   }
 
   /* ── Name + portrait stage ─────────────────────────── */
@@ -106,11 +116,9 @@ import Navbar from '../components/Navbar.astro';
     width: 100%;
     text-align: center;
     line-height: 0.86;
-    margin: 0;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     font-weight: 800;
     text-transform: uppercase;
-    /* Scales the whole treatment fluidly */
     font-size: clamp(56px, 15.5vw, 220px);
     pointer-events: none;
     user-select: none;
@@ -132,7 +140,6 @@ import Navbar from '../components/Navbar.astro';
     color: var(--ink);
   }
 
-  /* Portrait floats centered, overlapping both name lines */
   .portrait-wrap {
     position: absolute;
     z-index: 2;
@@ -151,7 +158,6 @@ import Navbar from '../components/Navbar.astro';
     height: 100%;
     object-fit: cover;
     object-position: center top;
-    /* Soft fade at the base so it melts into the layout like the reference */
     -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
     filter: grayscale(1) contrast(1.02);
@@ -164,87 +170,63 @@ import Navbar from '../components/Navbar.astro';
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    gap: 24px;
+    gap: 32px;
     flex-wrap: wrap;
   }
 
   .hero-intro {
-    max-width: 340px;
+    max-width: 380px;
   }
 
   .role {
-    font-size: clamp(18px, 2.4vw, 24px);
-    font-weight: 700;
+    font-size: clamp(20px, 2.4vw, 26px);
+    font-weight: 800;
+    letter-spacing: -0.01em;
     color: var(--ink);
-    margin: 0 0 8px;
+    margin-bottom: 8px;
   }
 
   .role-desc {
-    font-size: 13.5px;
-    line-height: 1.6;
+    font-size: 14.5px;
+    line-height: 1.65;
     color: var(--ink-muted);
-    margin: 0 0 20px;
+    margin-bottom: 24px;
   }
 
-  .cta-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--ink);
-    color: var(--bg);
-    font-size: 13px;
-    font-weight: 500;
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .hero-actions .btn {
+    font-size: 14px;
     padding: 12px 22px;
-    border-radius: 999px;
-    text-decoration: none;
-    transition: transform 0.2s, opacity 0.2s;
   }
 
-  .cta-btn:hover {
-    transform: translateY(-2px);
-    opacity: 0.92;
-  }
+  .arrow { font-size: 14px; }
 
-  .cta-btn .arrow { font-size: 14px; }
-
-  /* Social pills bottom-right */
-  .hero-socials {
+  .stack-row {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 10px;
-    align-items: stretch;
-  }
-
-  .social-pill {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 130px;
-    padding: 9px 18px;
-    font-size: 12.5px;
-    font-weight: 500;
-    color: var(--ink);
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-
-  .social-pill:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: translateX(-2px);
+    max-width: 400px;
+    justify-content: flex-end;
   }
 
   /* ── Responsive ────────────────────────────────────── */
   @media (max-width: 768px) {
     .hero {
-      padding: 72px 20px 28px;
+      padding: 32px var(--gutter) 28px;
+      gap: 32px;
     }
 
     .display-name {
       font-size: clamp(44px, 19vw, 120px);
+    }
+
+    .line-top {
+      -webkit-text-stroke-width: 1.5px;
     }
 
     .portrait-wrap {
@@ -257,14 +239,9 @@ import Navbar from '../components/Navbar.astro';
       gap: 28px;
     }
 
-    .hero-socials {
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-
-    .social-pill {
-      min-width: 0;
-      flex: 1 1 45%;
+    .stack-row {
+      justify-content: flex-start;
+      max-width: none;
     }
   }
 

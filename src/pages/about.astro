@@ -1,143 +1,171 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
 
+const highlights = [
+  { label: "Currently", value: "Software Engineer @ GEUTech, Stoxava" },
+  { label: "Based in", value: "Nigeria" },
+  { label: "Open to", value: "Interesting backend & infrastructure roles" },
+];
+
+const stats = [
+  { num: "6+", label: "Shipped projects" },
+  { num: "2", label: "Current roles" },
+  { num: "OSS", label: "Contributor" },
+];
 ---
 
 <Layout title="About">
   <Navbar />
 
   <main>
-    <section class="about-page">
+    <div class="page-shell">
       <div class="page-header">
-        <div class="prompt">$ whoami</div>
-        <h1>About</h1>
-      </div>
-
-      <div class="about-content">
-        <p class="intro">
+        <p class="eyebrow">$ whoami</p>
+        <h1 class="page-title">About</h1>
+        <p class="page-intro">
           I'm Emmanuel Inengiye, a backend engineer based in Nigeria.
         </p>
+      </div>
 
-        <p class="bio">
-          I build quiet, reliable systems that scale. Currently focused on 
-          distributed systems, IoT platforms, and open source tools.
-        </p>
+      <div class="about-grid">
+        <h2 class="section-title">What I do</h2>
 
-        <div class="highlights">
-          <div class="highlight-item">
-            <span class="label">Currently</span>
-            <span>Software Engineer @ GEUTech, Stoxava</span>
-          </div>
-          <div class="highlight-item">
-            <span class="label">Based in</span>
-            <span>Nigeria</span>
-          </div>
-          <div class="highlight-item">
-            <span class="label">Open to</span>
-            <span>Interesting backend &amp; infrastructure roles</span>
-          </div>
-        </div>
+        <div class="about-body">
+          <p class="body-text">
+            I build quiet, reliable systems that scale. My focus is the layer
+            behind the product — ingestion pipelines, APIs, databases, and the
+            infrastructure that keeps them running.
+          </p>
+          <p class="body-text">
+            Lately that's meant a multi-tenant IoT analytics platform end to end:
+            MQTT ingestion, real-time processing, ML-driven forecasting, and the
+            Docker-based infra underneath it.
+          </p>
 
-        <div class="cta">
-          <a href="/projects" class="cta-link">&gt; see my projects</a>
-          <a href="/writing" class="cta-link">&gt; read my writing</a>
+          <div class="stats-row">
+            {stats.map((s) => (
+              <div>
+                <p class="stat-num">{s.num}</p>
+                <p class="stat-label">{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          <div class="highlights">
+            {highlights.map((h) => (
+              <div class="highlight-item">
+                <span class="highlight-label">{h.label}</span>
+                <span class="highlight-value">{h.value}</span>
+              </div>
+            ))}
+          </div>
+
+          <div class="cta">
+            <a href="/projects" class="btn btn-primary">See my projects →</a>
+            <a href="/writing" class="btn btn-secondary">Read my writing</a>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   </main>
+
+  <Footer />
 </Layout>
 
 <style>
-  /* Desktop */
-  @media (min-width: 769px) {
-    main {
-      margin-left: 240px;
-      max-width: 720px;
-      padding: 60px 40px;
-    }
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 48px;
+    align-items: start;
   }
 
-  /* Mobile adjustments per page */
-  @media (max-width: 768px) {
-    main {
-      padding: 32px 20px;
-    }
+  /* The section title is the left column, so it drops its own bottom gap */
+  .about-grid .section-title {
+    margin-bottom: 0;
   }
 
-  .page-header {
-    margin-bottom: 48px;
-  }
-
-  .prompt {
-    font-size: 13px;
-    color: var(--ink-dim);
-    margin-bottom: 8px;
-  }
-
-  h1 {
-    font-size: 42px;
-    font-weight: 700;
-    margin-bottom: 12px;
-  }
-
-  .intro {
-    font-size: 17px;
-    line-height: 1.5;
-    color: var(--ink);
-    margin-bottom: 24px;
-  }
-
-  .bio {
-    font-size: 14.5px;
-    line-height: 1.75;
+  .body-text {
+    font-size: 16px;
+    line-height: 1.7;
     color: var(--ink-muted);
-    max-width: 560px;
-    margin-bottom: 40px;
+    margin-bottom: 16px;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stat-num {
+    font-family: var(--font-mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--ink-muted);
   }
 
   .highlights {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-bottom: 48px;
+    gap: 14px;
+    margin: 32px 0 40px;
   }
 
   .highlight-item {
     display: flex;
     gap: 24px;
-    font-size: 13.5px;
+    font-size: 14px;
   }
 
-  .label {
+  .highlight-label {
     width: 90px;
-    color: var(--accent);
-    font-weight: 500;
     flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .highlight-value {
+    color: var(--ink-muted);
   }
 
   .cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 12px;
   }
 
-  .cta-link {
-    color: var(--accent);
-    font-size: 13px;
-    text-decoration: none;
+  .cta .btn {
+    font-size: 14px;
+    padding: 12px 22px;
   }
 
-  .cta-link:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
+  @media (max-width: 900px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
   }
 
-   @media (max-width: 480px) {
+  @media (max-width: 480px) {
     .highlight-item {
       flex-direction: column;
       gap: 4px;
     }
-    .label { width: auto; }
+    .highlight-label { width: auto; }
+    .stats-row { gap: 28px; }
   }
 </style>

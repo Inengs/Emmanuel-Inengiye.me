@@ -1,77 +1,266 @@
-@import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap");
+/* ============================================================
+   Design tokens — ported from the standalone portfolio
+   ============================================================ */
 
-@layer base {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Type */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Light theme */
+  --accent: #58a6ff;
+  --accent-ink: #0d1117;        /* text that sits on top of --accent */
+  --bg: #fafaf9;
+  --bg-alt: #f1f0ee;
+  --bg-nav: oklch(0.98 0.005 250 / 0.85);
+  --card-bg: #ffffff;
+  /* Alias kept for Chatbot.astro / Terminal.astro */
+  --bg-secondary: var(--card-bg);
+  --ink: oklch(0.16 0.005 250);
+  --ink-muted: oklch(0.42 0.02 250);
+  --ink-dim: oklch(0.55 0.02 250);
+  --border: oklch(0 0 0 / 0.09);
+  --accent-bg: oklch(0.55 0.15 250 / 0.1);
+  --code-bg: oklch(0.92 0.005 250);
+  --success: #3fb950;
+
+  /* Shape */
+  --radius-sm: 5px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  /* Layout */
+  --nav-h: 69px;
+  --page-max: 1080px;
+  --gutter: 48px;
+
+  color-scheme: light;
+}
+
+:root.dark {
+  --bg: #0d1117;
+  --bg-alt: #111820;
+  --bg-nav: oklch(0.13 0.01 250 / 0.85);
+  --card-bg: oklch(0.22 0.01 250);
+  --bg-secondary: var(--card-bg);
+  --ink: oklch(0.94 0.005 250);
+  --ink-muted: oklch(0.68 0.02 250);
+  --ink-dim: oklch(0.55 0.02 250);
+  --border: oklch(1 0 0 / 0.1);
+  --accent-bg: oklch(0.7 0.15 250 / 0.12);
+  --code-bg: oklch(0.3 0.01 250);
+
+  color-scheme: dark;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.5); }
+  50%      { box-shadow: 0 0 0 5px rgba(63, 185, 80, 0); }
+}
+
+/* ============================================================
+   Shared page furniture
+   ============================================================ */
+
+.page-shell {
+  max-width: var(--page-max);
+  width: 100%;
+  margin-inline: auto;
+  padding: 88px var(--gutter) 100px;
+  animation: fadeUp 0.5s ease both;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.page-title {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+
+.page-intro {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--ink-muted);
+  max-width: 580px;
+}
+
+.page-header {
+  margin-bottom: 56px;
+}
+
+.section-title {
+  font-size: clamp(28px, 3.5vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 40px;
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+/* Chips */
+.chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border-radius: var(--radius-sm);
+  padding: 4px 9px;
+}
+
+.chip-outline {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-muted);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 14px 26px;
+  border-radius: var(--radius);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn:hover { transform: translateY(-2px); }
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn-secondary {
+  border: 1px solid var(--border);
+  color: var(--ink);
+}
+
+.btn-secondary:hover { border-color: var(--accent); }
+
+code {
+  font-family: var(--font-mono);
+  background: var(--code-bg);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.9em;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 768px) {
   :root {
-    --font-mono: "IBM Plex Mono", monospace;
-
-    /* light mode */
-    --bg: #faf9f6;
-    --bg-secondary: #f0ede6;
-    --ink: #1a1a1a;
-    --ink-muted: #4a4a4a;
-    --ink-dim: #888880;
-    --border: #c8c4bc;
-    --accent: #2d6a4f;
-    --accent-bg: #e8f5e9;
-    --accent-ink: #ffffff;
+    --gutter: 20px;
+    --nav-h: 57px;
   }
 
-  :root.dark {
-    --bg: #0d0d0d;
-    --bg-secondary: #0f1a0f;
-    --ink: #c8ffc8;
-    --ink-muted: #7abf7a;
-    --ink-dim: #4a7a4a;
-    --border: #1e331e;
-    --accent: #c8ffc8;
-    --accent-bg: #0f1f0f;
-    --accent-ink: #0d0d0d;
+  .page-shell {
+    padding: 72px var(--gutter) 72px;
   }
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  .page-header {
+    margin-bottom: 40px;
   }
+}
 
-  html {
-    font-family: var(--font-mono);
-    background-color: var(--bg);
-    color: var(--ink);
-    transition:
-      background-color 0.3s,
-      color 0.3s;
-  }
-
-  body {
-    min-height: 100vh;
-    line-height: 1.7;
-    font-size: 14px;
-  }
-
-  ::selection {
-    background: var(--accent);
-    color: var(--accent-ink);
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  h1 {
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1.1;
-  }
-  h2 {
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-  h3 {
-    font-size: 16px;
-    font-weight: 500;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

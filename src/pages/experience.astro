@@ -1,16 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
 
 const experiences = [
-  {
-    role: "Software Engineer",
-    company: "GEUTech",
-    location: "Calgary, Canada (Remote)",
-    period: "Nov 2025 — Present",
-    year: 2025,
-    description: "Building production IoT analytics platform (Adaptiq). Working on multi-tenant architecture, real-time data pipelines, and backend infrastructure.",
-  },
   {
     role: "Backend Engineer",
     company: "Stoxava",
@@ -19,174 +12,142 @@ const experiences = [
     year: 2026,
     description: "Backend development for the stoxava product",
   },
+  {
+    role: "Software Engineer",
+    company: "GEUTech",
+    location: "Calgary, Canada (Remote)",
+    period: "Nov 2025 — Present",
+    year: 2025,
+    description: "Building production IoT analytics platform (Adaptiq). Working on multi-tenant architecture, real-time data pipelines, and backend infrastructure.",
+  },
   // Add more experiences here in the future
 ];
 
-const experiencesByYear = experiences.reduce((acc, exp) => {
-  acc[exp.year] = acc[exp.year] || [];
-  acc[exp.year].push(exp);
-  return acc;
-}, {} as Record<number, typeof experiences>);
-
-const sortedYears = Object.keys(experiencesByYear).sort((a, b) => Number(b) - Number(a));
+const sorted = experiences.sort((a, b) => b.year - a.year);
 ---
 
 <Layout title="Experience">
   <Navbar />
 
   <main>
-    <section class="experience-page">
+    <div class="page-shell">
       <div class="page-header">
-        <div class="prompt">$ cat ~/experience.md</div>
-        <h1>Experience</h1>
-        <p class="intro">Where I've worked and what I've built.</p>
+        <p class="eyebrow">$ cat ~/experience.md</p>
+        <h1 class="page-title">Experience</h1>
+        <p class="page-intro">Where I've worked and what I've built.</p>
       </div>
 
-      {sortedYears.map((year) => (
-        <div class="year-section">
-          <div class="year-header">
-            <span class="year">{year}</span>
-          </div>
+      <div class="timeline">
+        {sorted.map((exp, i) => (
+          <div class="timeline-item">
+            <div class="dot-col">
+              <span class="dot"></span>
+              {i < sorted.length - 1 && <span class="line"></span>}
+            </div>
 
-          <div class="experience-list">
-            {experiencesByYear[Number(year)].map((exp) => (
-              <div class="experience-card">
-                <div class="card-top">
-                  <span class="period">{exp.period}</span>
-                  <span class="location">{exp.location}</span>
-                </div>
-
-                <h2 class="role">{exp.role}</h2>
-                <div class="company">{exp.company}</div>
-
-                <p class="description">{exp.description}</p>
+            <div class="timeline-content">
+              <div class="meta-row">
+                <span class="period">{exp.period}</span>
+                <span class="location">{exp.location}</span>
               </div>
-            ))}
+
+              <h2 class="role">{exp.role}</h2>
+              <p class="company">{exp.company}</p>
+              <p class="description">{exp.description}</p>
+            </div>
           </div>
-        </div>
-      ))}
-    </section>
+        ))}
+      </div>
+    </div>
   </main>
+
+  <Footer />
 </Layout>
 
 <style>
-  /* Desktop */
-  @media (min-width: 769px) {
-    main {
-      margin-left: 240px;
-      max-width: 720px;
-      padding: 60px 40px;
-    }
+  .timeline {
+    display: flex;
+    flex-direction: column;
   }
 
-  /* Mobile adjustments per page */
-  @media (max-width: 768px) {
-    main {
-      padding: 32px 20px;
-    }
+  .timeline-item {
+    display: flex;
+    gap: 24px;
   }
 
-  .page-header {
-    margin-bottom: 64px;
+  .dot-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 6px;
   }
 
-  .prompt {
-    font-size: 13px;
-    color: var(--ink-dim);
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .line {
+    width: 2px;
+    flex: 1;
+    background: var(--border);
+    margin-top: 4px;
+  }
+
+  .timeline-content {
+    padding-bottom: 48px;
+  }
+
+  .timeline-item:last-child .timeline-content {
+    padding-bottom: 0;
+  }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
     margin-bottom: 8px;
   }
 
-  h1 {
-    font-size: clamp(28px, 5vw, 42px);
-    font-weight: 700;
-    margin-bottom: 12px;
-  }
-
-  .intro {
-    font-size: 15px;
-    color: var(--ink-muted);
-  }
-
-  .year-section {
-    margin-bottom: 52px;
-  }
-
-  .year-header {
-    margin-bottom: 20px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .year {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-  }
-
-  .experience-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .experience-card {
-    padding: 24px 26px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    transition: all 0.25s ease;
-  }
-
-  .experience-card:hover {
-    border-color: var(--accent);
-    transform: translateX(4px);
-  }
-
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    font-size: 11.5px;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-
   .period {
+    font-family: var(--font-mono);
+    font-size: 13px;
     color: var(--accent);
-    font-weight: 500;
   }
 
   .location {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
     color: var(--ink-dim);
   }
 
   .role {
-    font-size: 17px;
+    font-size: 20px;
     font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: 4px;
+    letter-spacing: -0.01em;
     color: var(--ink);
+    margin-bottom: 4px;
   }
 
   .company {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--ink-muted);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .description {
-    font-size: 13.5px;
-    line-height: 1.65;
+    font-size: 15px;
+    line-height: 1.7;
     color: var(--ink-muted);
+    max-width: 620px;
   }
 
   @media (max-width: 480px) {
-    .experience-card {
-      padding: 18px 16px;
-    }
- 
-    .experience-card:hover {
-      transform: none;
-    }
+    .timeline-item { gap: 16px; }
+    .timeline-content { padding-bottom: 36px; }
   }
 </style>

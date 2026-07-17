@@ -1,58 +1,24 @@
 ---
 const links = [
   { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
   { href: "/projects", label: "Projects" },
-  { href: "/writing", label: "Writing" },
   { href: "/open-source", label: "Open Source" },
   { href: "/experience", label: "Experience" },
-  { href: "/about", label: "About" },
+  { href: "/writing", label: "Writing" },
 ];
 
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 ---
 
-<!-- Mobile top bar -->
-<div class="mobile-topbar">
-  <a href="/" class="nav-logo">&gt; Inengs.me</a>
-  <div class="mobile-right">
-    <button
-      class="theme-toggle mobile-theme"
-      onclick="window.__toggleTheme()"
-      aria-label="Toggle theme"
-    >
-      <span class="sun-icon">☀️</span>
-      <span class="moon-icon" style="display:none">🌙</span>
-    </button>
-    <button class="hamburger" id="hamburger" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</div>
+<nav class="topnav">
+  <a href="/" class="logo">$ inengs<span class="logo-accent">_</span>dev</a>
 
-<!-- Desktop floating menu button (shows when sidebar collapsed) -->
-<button class="menu-fab" id="menu-fab" aria-label="Open navigation">
-  <span></span><span></span><span></span>
-</button>
-
-<!-- Overlay for drawer -->
-<div class="nav-overlay" id="nav-overlay"></div>
-
-<nav class="sidebar collapsed" id="sidebar">
-  <div class="nav-inner">
-    <!-- Logo + collapse button -->
-    <div class="nav-top">
-      <a href="/" class="nav-logo desktop-logo">&gt; Inengs.me</a>
-      <button class="collapse-btn" id="collapse-btn" aria-label="Close navigation">×</button>
-    </div>
-
-    <!-- Navigation Links -->
+  <div class="nav-right">
     <ul class="nav-links">
       {links.map((link) => (
         <li>
-          <a
-            href={link.href}
-            class={currentPath === link.href || (currentPath === "/" && link.href === "/") ? "active" : ""}
-          >
+          <a href={link.href} class={currentPath === link.href ? "active" : ""}>
             {link.label}
           </a>
         </li>
@@ -60,330 +26,174 @@ const currentPath = Astro.url.pathname;
     </ul>
 
     <button
-      class="theme-toggle desktop-theme"
-      id="theme-toggle"
+      class="theme-toggle"
       onclick="window.__toggleTheme()"
       aria-label="Toggle theme"
     >
-      <span class="sun-icon">☀️</span>
-      <span class="moon-icon" style="display:none">🌙</span>
+      <span class="sun-icon">☀</span>
+      <span class="moon-icon" style="display:none">☾</span>
     </button>
 
-    <!-- Social Links -->
-    <div class="bottom-section">
-      <div class="social-links">
-        <img src="/IMG_0534.jpeg" alt="Emmanuel" class="avatar" />
-
-        <div class="divider"></div>
-
-        <a href="https://github.com/Inengs" target="_blank" aria-label="GitHub" class="social-link">
-          <img src="/github.svg" alt="GitHub" class="social-icon github" />
-        </a>
-        <a href="https://linkedin.com/in/emmanuel-inengiye-3a206a289" target="_blank" aria-label="LinkedIn" class="social-link">
-          <img src="/linkedin.svg" alt="LinkedIn" class="social-icon linkedin" />
-        </a>
-        <a href="https://instagram.com/_inengs/" target="_blank" aria-label="Instagram" class="social-link">
-          <img src="/instagram.svg" alt="Instagram" class="social-icon instagram" />
-        </a>
-        <a href="https://x.com/inengiyeemmanuel" target="_blank" aria-label="X" class="social-link">
-          <svg class="social-icon x-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-          </svg>
-        </a>
-        <a href="/resume.pdf" target="_blank" aria-label="Resume" class="social-link resume-link">
-          <svg class="social-icon resume-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-          </svg>
-        </a>
-      </div>
-    </div>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
+<!-- Mobile drawer -->
+<div class="nav-overlay" id="nav-overlay"></div>
+
+<aside class="drawer" id="drawer">
+  <div class="drawer-top">
+    <span class="drawer-label">Menu</span>
+    <button class="close-btn" id="close-btn" aria-label="Close menu">×</button>
+  </div>
+
+  <ul class="drawer-links">
+    {links.map((link) => (
+      <li>
+        <a href={link.href} class={currentPath === link.href ? "active" : ""}>
+          {link.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <div class="drawer-bottom">
+    <img src="/IMG_0534.jpeg" alt="Emmanuel Inengiye" class="avatar" />
+    <div class="socials">
+      <a href="https://github.com/Inengs" target="_blank" rel="noopener" aria-label="GitHub">GitHub</a>
+      <a href="https://linkedin.com/in/emmanuel-inengiye-3a206a289" target="_blank" rel="noopener" aria-label="LinkedIn">LinkedIn</a>
+      <a href="https://x.com/inengiyeemmanuel" target="_blank" rel="noopener" aria-label="X">X</a>
+      <a href="/resume.pdf" target="_blank" rel="noopener" aria-label="Resume">Resume</a>
+    </div>
+  </div>
+</aside>
 
 <script>
-  const hamburger = document.getElementById('hamburger');
-  const menuFab = document.getElementById('menu-fab');
-  const collapseBtn = document.getElementById('collapse-btn');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('nav-overlay');
+  const hamburger = document.getElementById("hamburger");
+  const closeBtn = document.getElementById("close-btn");
+  const drawer = document.getElementById("drawer");
+  const overlay = document.getElementById("nav-overlay");
 
   function openMenu() {
-    sidebar?.classList.add('open');
-    sidebar?.classList.remove('collapsed');
-    overlay?.classList.add('visible');
-    document.body.style.overflow = 'hidden';
+    drawer?.classList.add("open");
+    overlay?.classList.add("visible");
+    hamburger?.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
   }
 
   function closeMenu() {
-    sidebar?.classList.remove('open');
-    sidebar?.classList.add('collapsed');
-    overlay?.classList.remove('visible');
-    document.body.style.overflow = '';
+    drawer?.classList.remove("open");
+    overlay?.classList.remove("visible");
+    hamburger?.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
   }
 
-  hamburger?.addEventListener('click', openMenu);
-  menuFab?.addEventListener('click', openMenu);
-  collapseBtn?.addEventListener('click', closeMenu);
-  overlay?.addEventListener('click', closeMenu);
-
-  // Close on nav link click
-  sidebar?.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', closeMenu);
-  });
-
-  // Close on Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeMenu();
+  hamburger?.addEventListener("click", openMenu);
+  closeBtn?.addEventListener("click", closeMenu);
+  overlay?.addEventListener("click", closeMenu);
+  drawer?.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
   });
 </script>
 
-
 <style>
-  /* ── Sidebar (drawer on all sizes) ───────────────── */
-  .sidebar {
-    position: fixed;
-    left: 0;
+  /* ── Sticky top nav ──────────────────────────────── */
+  .topnav {
+    position: sticky;
     top: 0;
-    bottom: 0;
-    width: 240px;
-    background-color: var(--bg);
-    border-right: 1px solid var(--border);
-    z-index: 55;
-    padding: 28px 24px;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.3s ease;
-  }
-
-  /* Collapsed = slid off-screen */
-  .sidebar.collapsed {
-    transform: translateX(-100%);
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .nav-inner {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .nav-top {
+    z-index: 50;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 32px;
+    padding: 20px var(--gutter);
+    background: var(--bg-nav);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
   }
 
-  .nav-logo {
+  .logo {
+    font-family: var(--font-mono);
     font-weight: 700;
-    font-size: 13px;
+    font-size: 18px;
     color: var(--ink);
-    transition: color 0.2s;
-    text-decoration: none;
+    transition: opacity 0.2s;
   }
 
-  .nav-logo:hover { color: var(--accent); }
+  .logo:hover { opacity: 0.75; }
+  .logo-accent { color: var(--accent); }
 
-  .collapse-btn {
-    background: none;
-    border: none;
-    font-size: 22px;
-    line-height: 1;
-    color: var(--ink-muted);
-    cursor: pointer;
-    padding: 0 4px;
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 32px;
   }
-
-  .collapse-btn:hover { color: var(--ink); }
 
   .nav-links {
-    list-style: none;
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-bottom: 32px;
-    padding: 0;
+    align-items: center;
+    gap: 32px;
   }
 
   .nav-links a {
-    display: block;
+    position: relative;
     font-size: 14px;
+    font-weight: 500;
     color: var(--ink-muted);
-    padding: 6px 12px;
+    padding: 4px 0;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a.active { color: var(--ink); }
+
+  /* Accent underline marks the current page */
+  .nav-links a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    background: var(--accent);
     border-radius: 2px;
-    transition: all 0.2s;
-    text-decoration: none;
   }
 
-  .nav-links a:hover,
-  .nav-links a.active {
-    color: var(--ink);
-    background: var(--accent-bg);
-  }
-
-  .nav-links a.active {
-    border-left: 2px solid var(--accent);
-    padding-left: 10px;
-  }
-
-  /* ── Smaller theme toggle ────────────────────────── */
   .theme-toggle {
-    background: none;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid var(--border);
-    font-size: 12px;          /* was 16px — smaller icon */
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--ink);
+    font-size: 16px;
     line-height: 1;
-    padding: 5px 8px;         /* tighter */
     cursor: pointer;
-    align-self: flex-start;
-    border-radius: 5px;
-    transition: all 0.2s;
-    margin-bottom: auto;
+    transition: border-color 0.2s, transform 0.2s;
+    flex-shrink: 0;
   }
 
   .theme-toggle:hover {
-    border-color: var(--ink);
-    transform: scale(1.05);
-  }
-
-  /* ── Floating "open menu" button (desktop) ───────── */
-  .menu-fab {
-    position: fixed;
-    top: 22px;
-    left: 22px;
-    z-index: 52;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 11px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-
-  .menu-fab:hover {
     border-color: var(--accent);
     transform: translateY(-1px);
   }
 
-  .menu-fab span {
-    display: block;
-    width: 18px;
-    height: 1.5px;
-    background: var(--ink);
-  }
-
-  /* Hide the desktop fab while the sidebar is open */
-  .sidebar.open ~ .menu-fab,
-  body:has(.sidebar.open) .menu-fab {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  /* ── Bottom social section ───────────────────────── */
-  .bottom-section {
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-    margin-top: auto;
-  }
-
-  .social-links {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .avatar {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  .divider {
-    width: 1px;
-    height: 16px;
-    background: var(--border);
-    margin: 0 4px;
-  }
-
-  .social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s, opacity 0.2s;
-  }
-
-  .social-link:hover {
-    transform: translateY(-2px);
-    opacity: 0.8;
-  }
-
-  .social-icon {
-    width: 16px;
-    height: 16px;
-    display: block;
-  }
-
-  .github { filter: invert(1); }
-  :global(:root:not(.dark)) .github { filter: invert(0); }
-
-  .linkedin {
-    filter: invert(35%) sepia(80%) saturate(500%) hue-rotate(175deg) brightness(90%);
-  }
-
-  .instagram {
-    filter: invert(30%) sepia(80%) saturate(800%) hue-rotate(290deg) brightness(90%);
-  }
-
-  .x-icon { color: var(--ink); }
-  .resume-icon { color: var(--accent); }
-
-  /* ── Mobile top bar ──────────────────────────────── */
-  .mobile-topbar {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 56px;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    z-index: 60;
-    padding: 0 20px;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .mobile-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .mobile-theme {
-    margin-bottom: 0;
-    padding: 5px 8px;
-    font-size: 12px;
-  }
-
+  /* ── Hamburger (mobile only) ─────────────────────── */
   .hamburger {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 8px 10px;
-    cursor: pointer;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 4px;
+    padding: 9px 10px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
   }
 
   .hamburger span {
@@ -391,15 +201,115 @@ const currentPath = Astro.url.pathname;
     width: 18px;
     height: 1.5px;
     background: var(--ink);
-    transition: all 0.2s;
   }
+
+  /* ── Drawer ──────────────────────────────────────── */
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 260px;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    background: var(--bg);
+    border-left: 1px solid var(--border);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .drawer.open { transform: translateX(0); }
+
+  .drawer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .drawer-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--ink-muted);
+    cursor: pointer;
+    padding: 0 4px;
+  }
+
+  .close-btn:hover { color: var(--ink); }
+
+  .drawer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .drawer-links a {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .drawer-links a:hover,
+  .drawer-links a.active {
+    color: var(--ink);
+    background: var(--accent-bg);
+  }
+
+  .drawer-links a.active {
+    border-left: 2px solid var(--accent);
+    padding-left: 10px;
+  }
+
+  .drawer-bottom {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+  }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+  }
+
+  .socials a {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    transition: color 0.2s;
+  }
+
+  .socials a:hover { color: var(--accent); }
 
   .nav-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 40;
+    z-index: 55;
+    background: rgba(0, 0, 0, 0.5);
     opacity: 0;
     transition: opacity 0.3s;
   }
@@ -409,21 +319,11 @@ const currentPath = Astro.url.pathname;
     opacity: 1;
   }
 
-  .desktop-logo { display: block; }
-  .mobile-theme { display: none; }
-
-  /* ── Responsive breakpoint ───────────────────────── */
-  @media (max-width: 768px) {
-    .mobile-topbar { display: flex; }
-    .menu-fab { display: none; }      /* mobile uses hamburger in topbar */
-    .desktop-theme { display: none; }
-    .mobile-theme { display: block; }
-
-    .sidebar {
-      top: 0;
-      z-index: 56;
-      width: 260px;
-      padding-top: 20px;
-    }
+  /* ── Responsive ──────────────────────────────────── */
+  @media (max-width: 900px) {
+    .topnav { padding: 14px var(--gutter); }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-right { gap: 12px; }
   }
 </style>

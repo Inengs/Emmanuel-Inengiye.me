@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
 
 const projects = [
   {
@@ -62,7 +63,7 @@ const projects = [
       live: "https://drive.google.com/file/d/10Ujwi_uDs_Lqlb2G_ll1bY_f_5mYy5TM/view?usp=sharing"
     }
   },
-    {
+  {
     title: "My Books Directory App",
     slug: "booksdirectory",
     description: "a full-stack web application for managing a collection of books!",
@@ -78,168 +79,126 @@ const projects = [
 ];
 
 const sortedProjects = projects.sort((a, b) => Number(b.year) - Number(a.year));
-
 ---
 
 <Layout title="Projects">
   <Navbar />
 
   <main>
-    <section class="projects-page">
+    <div class="page-shell">
       <div class="page-header">
-        <div class="prompt">$ ls ~/projects</div>
-        <h1>Projects</h1>
-        <p class="intro">Things I've built that I'm proud of.</p>
+        <p class="eyebrow">$ ls ~/projects</p>
+        <h1 class="page-title">Projects</h1>
+        <p class="page-intro">Things I've built that I'm proud of.</p>
       </div>
 
       <div class="projects-grid">
         {sortedProjects.map((project) => (
-          <div class="project-card">
-            <div class="card-header">
-              <div class="project-title">&gt; {project.title}</div>
-              <div class="project-year">{project.year}</div>
+          <article class="card project-card">
+            <div>
+              <div class="card-header">
+                <h2 class="project-title">{project.title}</h2>
+                <span class="project-year">{project.year}</span>
+              </div>
+
+              <p class="project-desc">{project.description}</p>
             </div>
 
-            <p class="project-desc">{project.description}</p>
+            <div class="card-bottom">
+              <div class="tech-stack">
+                {project.tech.map((tech) => <span class="chip">{tech}</span>)}
+              </div>
 
-            <div class="tech-stack">
-              {project.tech.map((tech) => (
-                <span class="tag">{tech}</span>
-              ))}
-            </div>
+              <div class="card-footer">
+                <span class="status">{project.status}</span>
 
-            <div class="card-footer">
-              <span class="status">{project.status}</span>
-              
-              <div class="project-links">
-                {project.links.github && (
-                  <a href={project.links.github} target="_blank" rel="noopener">github →</a>
-                )}
-                {project.links.live && (
-                  <a href={project.links.live} target="_blank" rel="noopener">live →</a>
-                )}
+                <div class="project-links">
+                  {project.links.github && (
+                    <a href={project.links.github} target="_blank" rel="noopener">github →</a>
+                  )}
+                  {project.links.live && (
+                    <a href={project.links.live} target="_blank" rel="noopener">live →</a>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          </article>
         ))}
       </div>
-    </section>
+    </div>
   </main>
+
+  <Footer />
 </Layout>
 
 <style>
-  /* Desktop */
-  @media (min-width: 769px) {
-    main {
-      margin-left: 240px;
-      max-width: 720px;
-      padding: 60px 40px;
-    }
-  }
-
-  /* Mobile adjustments per page */
-  @media (max-width: 768px) {
-    main {
-      padding: 32px 20px;
-    }
-  }
-
-  .projects-page {
-    max-width: 820px;
-  }
-
-  .page-header {
-    margin-bottom: 60px;
-  }
-
-  .prompt {
-    font-size: 13px;
-    color: var(--ink-dim);
-    margin-bottom: 8px;
-  }
-
-  h1 {
-    font-size: clamp(28px, 5vw, 42px);
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: var(--ink);
-  }
- 
-
-  .intro {
-    font-size: 15px;
-    color: var(--ink-muted);
-    max-width: 500px;
-  }
-
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    gap: 28px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
   }
 
   .project-card {
-    border: 1px solid var(--border);
-    padding: 24px;
-    background: var(--bg);
-    transition: all 0.25s ease;
-  }
-
-  .project-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 240px;
   }
 
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 16px;
+    gap: 12px;
+    margin-bottom: 12px;
   }
 
   .project-title {
-    font-size: 15px;
+    font-size: 19px;
     font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--ink);
   }
 
   .project-year {
-    font-size: 11px;
+    font-family: var(--font-mono);
+    font-size: 13px;
     color: var(--ink-dim);
     white-space: nowrap;
   }
 
   .project-desc {
-    font-size: 13.5px;
-    line-height: 1.65;
+    font-size: 14.5px;
+    line-height: 1.6;
     color: var(--ink-muted);
-    margin-bottom: 20px;
+  }
+
+  .card-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
   }
 
   .tech-stack {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 24px;
-  }
-
-  .tag {
-    font-size: 10.5px;
-    padding: 2px 9px;
-    border: 1px solid var(--border);
-    color: var(--ink-muted);
+    gap: 8px;
   }
 
   .card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11px;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
   }
 
   .status {
-    color: var(--accent);
-    font-weight: 500;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-dim);
   }
 
   .project-links {
@@ -248,22 +207,20 @@ const sortedProjects = projects.sort((a, b) => Number(b.year) - Number(a.year));
   }
 
   .project-links a {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 600;
     color: var(--accent);
     transition: opacity 0.2s;
-    text-decoration: none;
   }
 
-  .project-links a:hover {
-    opacity: 0.7;
-  }
+  .project-links a:hover { opacity: 0.7; }
 
-  /* ── Responsive ──────────────────────────────────── */
   @media (max-width: 768px) {
-    .projects-grid {
-      grid-template-columns: 1fr;
-    }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card:hover { transform: none; }
   }
- 
+
   @media (max-width: 480px) {
     .card-header {
       flex-direction: column;
